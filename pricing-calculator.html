@@ -104,6 +104,14 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .pkg-items li::before{content:''; display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--purple);margin-right:8px;vertical-align:middle}
 .pkg-items li:hover{color:var(--text)}
 
+/* Pricing flow diagram */
+.pricing-flow{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(92,74,133,.06),rgba(121,102,162,.04));border:1px solid rgba(121,102,162,.15);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;flex-wrap:wrap}
+.pf-step{text-align:center;flex:0 0 auto}
+.pf-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--purple-dark),var(--purple));color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 5px}
+.pf-label{font-size:.78rem;font-weight:600;color:var(--text)}
+.pf-sub{font-size:.65rem;color:var(--text-dim)}
+.pf-arrow{font-size:.68rem;color:var(--purple);font-weight:500;letter-spacing:.2px;flex:1;text-align:center;min-width:80px}
+
 /* Toggle */
 .toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
 .toggle-row label{font-size:.8rem;color:var(--text-dim);font-weight:500}
@@ -179,36 +187,44 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 <div id="tab1" class="tab-content active">
   <div class="summary-bar" id="t1-summary"></div>
   <div class="card">
-    <h3>Global Variables</h3>
+    <h3>Pricing Setup</h3>
+    <div class="pricing-flow">
+      <div class="pf-step"><div class="pf-num">1</div><div class="pf-label">Dev Cost</div><div class="pf-sub">Hours × Rate</div></div>
+      <div class="pf-arrow">+ Agency Margin →</div>
+      <div class="pf-step"><div class="pf-num">2</div><div class="pf-label">Wholesale Price</div><div class="pf-sub">Your price to resell</div></div>
+      <div class="pf-arrow">+ ScaleLogix Commission →</div>
+      <div class="pf-step"><div class="pf-num">3</div><div class="pf-label">Client Price</div><div class="pf-sub">What the client pays</div></div>
+    </div>
     <div class="input-grid">
       <div class="field">
-        <label>r — Blended Rate ($/hr)</label>
+        <label>Dev Rate ($/hr)</label>
         <input type="number" id="cfg-r" value="87.50" step="0.50" min="0">
+        <span class="hint">Hourly cost to build &amp; maintain automations</span>
       </div>
       <div class="field">
-        <label>Gross Margin %</label>
+        <label>Agency Margin %</label>
         <input type="number" id="cfg-margin-pct" value="50" step="1" min="1" max="99">
-        <span class="hint">Target gross margin — auto-sets mu</span>
+        <span class="hint">Your profit as agency owner — at 50%, a $100 dev cost becomes $200 wholesale</span>
+      </div>
+      <div class="field" style="opacity:.55">
+        <label>Wholesale Multiplier (auto)</label>
+        <input type="number" id="cfg-mu" value="2.0" step="0.1" min="1" readonly style="cursor:default">
+        <span class="hint">Auto-calculated from Agency Margin — do not edit</span>
       </div>
       <div class="field">
-        <label>mu — Margin Multiplier</label>
-        <input type="number" id="cfg-mu" value="2.0" step="0.1" min="1">
-        <span class="hint">mu = 1 / (1 - margin%)</span>
+        <label>ScaleLogix Commission %</label>
+        <input type="number" id="cfg-phi" value="20" step="1" min="0" max="100">
+        <span class="hint">Added on top of wholesale — ScaleLogix's cut for selling on your behalf</span>
       </div>
       <div class="field">
-        <label>phi — Client Fee Multiplier</label>
-        <input type="number" id="cfg-phi" value="1.20" step="0.05" min="1">
-        <span class="hint">1.20 = 20% on top of wholesale</span>
+        <label>Minimum Price Floor %</label>
+        <input type="number" id="cfg-lambda" value="75" step="5" min="0" max="100">
+        <span class="hint">Never price below this % of wholesale — protects your minimum margin</span>
       </div>
       <div class="field">
-        <label>lambda — Hard Floor Multiplier</label>
-        <input type="number" id="cfg-lambda" value="0.75" step="0.05" min="0" max="1">
-        <span class="hint">0.75 = 33% absolute margin minimum</span>
-      </div>
-      <div class="field">
-        <label>ds — Plus Bundle Discount</label>
-        <input type="number" id="cfg-ds" value="0.15" step="0.01" min="0" max="1">
-        <span class="hint">15% discount on Plus when bundled with Core</span>
+        <label>Plus Bundle Discount %</label>
+        <input type="number" id="cfg-ds" value="15" step="1" min="0" max="100">
+        <span class="hint">Discount applied when client buys Core + Plus together</span>
       </div>
     </div>
   </div>
@@ -277,9 +293,9 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 const CFG = {
   get r(){ return parseFloat(document.getElementById('cfg-r').value) || 87.50 },
   get mu(){ return parseFloat(document.getElementById('cfg-mu').value) || 2.0 },
-  get phi(){ return parseFloat(document.getElementById('cfg-phi').value) || 1.20 },
-  get lambda(){ return parseFloat(document.getElementById('cfg-lambda').value) || 0.75 },
-  get ds(){ return parseFloat(document.getElementById('cfg-ds').value) || 0.15 },
+  get phi(){ return 1 + (parseFloat(document.getElementById('cfg-phi').value) || 20) / 100 },
+  get lambda(){ return (parseFloat(document.getElementById('cfg-lambda').value) || 75) / 100 },
+  get ds(){ return (parseFloat(document.getElementById('cfg-ds').value) || 15) / 100 },
 };
 
 // ========== BUNDLE PRICING LOGIC ==========
