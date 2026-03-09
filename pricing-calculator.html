@@ -63,8 +63,6 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .result-box:hover{border-color:var(--border-light)}
 .result-box .rlabel{font-size:.62rem;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:5px;font-weight:500}
 .result-box .rvalue{font-size:1.05rem;font-weight:700;color:var(--white)}
-.result-box.floor-warn{border-color:var(--red);background:rgba(232,112,112,.06)}
-.result-box.floor-warn .rvalue{color:var(--red)}
 
 /* Capability Table */
 .cap-table{width:100%;border-collapse:collapse}
@@ -217,11 +215,6 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
         <span class="hint">Added on top of wholesale — ScaleLogix's cut for selling on your behalf</span>
       </div>
       <div class="field">
-        <label>Minimum Price Floor %</label>
-        <input type="number" id="cfg-lambda" value="75" step="5" min="0" max="100">
-        <span class="hint">Never price below this % of wholesale — protects your minimum margin</span>
-      </div>
-      <div class="field">
         <label>Plus Bundle Discount %</label>
         <input type="number" id="cfg-ds" value="15" step="1" min="0" max="100">
         <span class="hint">Discount applied when client buys Core + Plus together</span>
@@ -294,7 +287,6 @@ const CFG = {
   get r(){ return parseFloat(document.getElementById('cfg-r').value) || 87.50 },
   get mu(){ return parseFloat(document.getElementById('cfg-mu').value) || 2.0 },
   get phi(){ return 1 + (parseFloat(document.getElementById('cfg-phi').value) || 20) / 100 },
-  get lambda(){ return (parseFloat(document.getElementById('cfg-lambda').value) || 75) / 100 },
   get ds(){ return (parseFloat(document.getElementById('cfg-ds').value) || 15) / 100 },
 };
 
@@ -311,7 +303,6 @@ function roundMonthly(v){ return Math.round(v / 25) * 25 }
 function wholesaleSetup(hb){ return hb * CFG.r * CFG.mu }
 function wholesaleMonthly(hm){ return hm * CFG.r * CFG.mu }
 function clientPrice(w){ return w * CFG.phi }
-function hardFloor(w){ return w * CFG.lambda }
 function marginPct(client, cost){ return cost === 0 ? 0 : ((client - cost) / client * 100) }
 
 function tierDiscount(n){
@@ -616,8 +607,6 @@ function renderTab1(){
   const wMonthly = roundMonthly(wMonthlyRaw);
   const cSetup = roundSetup(clientPrice(wSetupRaw));
   const cMonthly = roundMonthly(clientPrice(wMonthlyRaw));
-  const fSetup = roundSetup(hardFloor(wSetupRaw));
-  const fMonthly = roundMonthly(hardFloor(wMonthlyRaw));
   const cost = hb * CFG.r + hm * CFG.r;
   const revenue = wSetup + wMonthly;
   const mgn = revenue > 0 ? ((revenue - cost) / revenue * 100) : 0;
@@ -630,18 +619,12 @@ function renderTab1(){
     <div class="summary-item"><div class="label">Margin %</div><div class="value green">${mgn.toFixed(1)}%</div></div>
   `;
 
-  const floorWarnS = cSetup < fSetup ? ' floor-warn' : '';
-  const floorWarnM = cMonthly < fMonthly ? ' floor-warn' : '';
-
   document.getElementById('t1-results').innerHTML = `
     <div class="result-box"><div class="rlabel">Wholesale Setup</div><div class="rvalue">${fmt(wSetup)}</div></div>
     <div class="result-box"><div class="rlabel">Wholesale Monthly</div><div class="rvalue">${fmt(wMonthly)}</div></div>
     <div class="result-box"><div class="rlabel">Client Setup</div><div class="rvalue" style="color:var(--purple)">${fmt(cSetup)}</div></div>
     <div class="result-box"><div class="rlabel">Client Monthly</div><div class="rvalue" style="color:var(--purple)">${fmt(cMonthly)}</div></div>
-    <div class="result-box${floorWarnS}"><div class="rlabel">Hard Floor Setup</div><div class="rvalue">${fmt(fSetup)}</div></div>
-    <div class="result-box${floorWarnM}"><div class="rlabel">Hard Floor Monthly</div><div class="rvalue">${fmt(fMonthly)}</div></div>
     <div class="result-box"><div class="rlabel">Gross Margin %</div><div class="rvalue" style="color:var(--green)">${mgn.toFixed(1)}%</div></div>
-    <div class="result-box"><div class="rlabel">Quick Est. (h_b x $210)</div><div class="rvalue">${fmt(hb * 210)}</div></div>
   `;
 }
 
@@ -699,8 +682,6 @@ function renderTab2(){
   const discWm = roundMonthly(sumWm * (1 - dn));
   const cWs = roundSetup(clientPrice(sumWs * (1 - dn)));
   const cWm = roundMonthly(clientPrice(sumWm * (1 - dn)));
-  const fWs = roundSetup(hardFloor(sumWs * (1 - dn)));
-  const fWm = roundMonthly(hardFloor(sumWm * (1 - dn)));
   const savingsS = fullWs - discWs;
   const savingsM = fullWm - discWm;
 
@@ -719,7 +700,6 @@ function renderTab2(){
     <div class="summary-item"><div class="label">W. Setup Total</div><div class="value">${fmt(discWs)}</div></div>
     <div class="summary-item"><div class="label">W. Monthly Total</div><div class="value">${fmt(discWm)}</div></div>
     <div class="summary-item"><div class="label">Client Total Setup</div><div class="value gold">${fmt(cWs)}</div></div>
-    <div class="summary-item"><div class="label">Hard Floor Setup</div><div class="value${cWs < fWs ? ' red' : ''}">${fmt(fWs)}</div></div>
     <div class="summary-item"><div class="label">Setup Savings</div><div class="value green">${fmt(savingsS)}</div></div>
     <div class="summary-item"><div class="label">Monthly Savings</div><div class="value green">${fmt(savingsM)}</div></div>
   `;
@@ -929,8 +909,6 @@ function renderTab4(){
   const plusSavingsMonthly = roundMonthly(wholesaleMonthly(secHm) * ds);
   const totalBundleSavingsSetup = plusSavingsSetup + coreEffSavingsS;
   const totalBundleSavingsMonthly = plusSavingsMonthly + coreEffSavingsM;
-  const floorWs = roundSetup(hardFloor(comboWsRaw));
-  const floorWm = roundMonthly(hardFloor(comboWmRaw));
 
   const hasCore = coreHb > 0 || coreHm > 0;
   const hasSec = secHb > 0 || secHm > 0;
@@ -940,8 +918,6 @@ function renderTab4(){
     <div class="price-row"><span class="plabel">Combo Wholesale Monthly</span><span class="pval">${fmt(comboWm)}</span></div>
     <div class="price-row"><span class="plabel">Combo Client Setup</span><span class="pval gold">${fmt(comboCs)}</span></div>
     <div class="price-row"><span class="plabel">Combo Client Monthly</span><span class="pval gold">${fmt(comboCm)}</span></div>
-    <div class="price-row"><span class="plabel">Hard Floor Setup</span><span class="pval${comboCs < floorWs ? ' red' : ''}">${fmt(floorWs)}</span></div>
-    <div class="price-row"><span class="plabel">Hard Floor Monthly</span><span class="pval${comboCm < floorWm ? ' red' : ''}">${fmt(floorWm)}</span></div>
   `;
 
   if(hasCore && hasSec){
@@ -994,7 +970,7 @@ muInput.addEventListener('input', () => {
 });
 
 // Listen to config changes
-['cfg-r','cfg-phi','cfg-lambda','cfg-ds'].forEach(id => {
+['cfg-r','cfg-phi','cfg-ds'].forEach(id => {
   document.getElementById(id).addEventListener('input', updateAll);
 });
 ['t1-hb','t1-hm'].forEach(id => {
