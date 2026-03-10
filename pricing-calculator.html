@@ -142,6 +142,13 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .scroll-wrap::-webkit-scrollbar{width:6px}
 .scroll-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
+/* View toggle button */
+.view-toggle-btn{position:fixed;top:18px;right:22px;z-index:200;background:var(--purple);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-size:.74rem;font-weight:600;cursor:pointer;letter-spacing:.4px;box-shadow:0 2px 14px rgba(92,74,133,.35);transition:all .2s;font-family:inherit}
+.view-toggle-btn:hover{background:var(--purple-dark);box-shadow:0 4px 18px rgba(92,74,133,.45)}
+body.client-mode .view-toggle-btn{background:var(--surface);color:var(--purple);border:1.5px solid var(--purple)}
+body.client-mode .sales-only{display:none!important}
+body.client-mode .tab-btn[data-tab="tab1"],body.client-mode .tab-btn[data-tab="tab2"]{display:none!important}
+
 /* Presentation mode polish */
 ::selection{background:rgba(196,154,124,.3);color:var(--white)}
 input[type="number"]::-webkit-inner-spin-button{opacity:.5}
@@ -167,6 +174,8 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
   <p>Wholesale Pricing Calculator Dashboard</p>
   <div class="header-line"></div>
 </header>
+
+<button class="view-toggle-btn" id="view-toggle" onclick="toggleView()">Client View</button>
 
 <div class="tabs">
   <button class="tab-btn active" data-tab="tab1">Single Item</button>
@@ -641,15 +650,15 @@ function renderTab4(){
     : `${coreChecked} automations`;
 
   let coreTotalsHtml = `
-    <div class="price-row"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(coreWs)}</span></div>
-    <div class="price-row"><span class="plabel">Wholesale Monthly</span><span class="pval">${fmt(coreWm)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(coreWs)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Wholesale Monthly</span><span class="pval">${fmt(coreWm)}</span></div>
     <div class="price-row"><span class="plabel">Client Setup</span><span class="pval gold">${fmt(coreCs)}</span></div>
     <div class="price-row"><span class="plabel">Client Monthly</span><span class="pval gold">${fmt(coreCm)}</span></div>
   `;
   if(isFullCore){
     coreTotalsHtml += `
     <div class="efficiency-banner">
-      <div class="slabel">Bundle Efficiency — ~${(CORE_BUNDLE_EFFICIENCY*100).toFixed(0)}% faster fulfillment · ${(coreBundleDisc*100).toFixed(0)}% discount applied</div>
+      <div class="slabel sales-only">Bundle Efficiency — ~${(CORE_BUNDLE_EFFICIENCY*100).toFixed(0)}% faster fulfillment · ${(coreBundleDisc*100).toFixed(0)}% discount applied</div>
       <div class="sval">${fmt(coreEffSavingsS)} setup · ${fmt(coreEffSavingsM)}/mo saved</div>
     </div>`;
   }
@@ -676,8 +685,8 @@ function renderTab4(){
   document.getElementById('plus-meta').textContent = `${secChecked} advanced add-ons`;
 
   document.getElementById('ins-sec-totals').innerHTML = `
-    <div class="price-row"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(secWs)}</span></div>
-    <div class="price-row"><span class="plabel">Wholesale Monthly</span><span class="pval">${fmt(secWm)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(secWs)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Wholesale Monthly</span><span class="pval">${fmt(secWm)}</span></div>
     <div class="price-row"><span class="plabel">Client Setup</span><span class="pval gold">${fmt(secCs)}</span></div>
     <div class="price-row"><span class="plabel">Client Monthly</span><span class="pval gold">${fmt(secCm)}</span></div>
   `;
@@ -702,10 +711,10 @@ function renderTab4(){
   const hasSec = secHb > 0 || secHm > 0;
 
   let comboHtml = `
-    <div class="price-row"><span class="plabel">Combo Wholesale Setup</span><span class="pval">${fmt(comboWs)}</span></div>
-    <div class="price-row"><span class="plabel">Combo Wholesale Monthly</span><span class="pval">${fmt(comboWm)}</span></div>
-    <div class="price-row"><span class="plabel">Combo Client Setup</span><span class="pval gold">${fmt(comboCs)}</span></div>
-    <div class="price-row"><span class="plabel">Combo Client Monthly</span><span class="pval gold">${fmt(comboCm)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Combo Wholesale Setup</span><span class="pval">${fmt(comboWs)}</span></div>
+    <div class="price-row sales-only"><span class="plabel">Combo Wholesale Monthly</span><span class="pval">${fmt(comboWm)}</span></div>
+    <div class="price-row"><span class="plabel">Setup Investment</span><span class="pval gold">${fmt(comboCs)}</span></div>
+    <div class="price-row"><span class="plabel">Monthly Investment</span><span class="pval gold">${fmt(comboCm)}</span></div>
   `;
   if(hasCore && hasSec){
     const coreTag = isFullCore ? ` + Core ${(coreBundleDisc*100).toFixed(0)}% efficiency` : '';
@@ -719,12 +728,25 @@ function renderTab4(){
 
   // Summary bar
   document.getElementById('t4-summary').innerHTML = `
-    <div class="summary-item"><div class="label">Core W. Setup</div><div class="value">${fmt(coreWs)}</div></div>
-    <div class="summary-item"><div class="label">Plus W. Setup</div><div class="value">${fmt(secWs)}</div></div>
-    <div class="summary-item"><div class="label">Combo W. Setup</div><div class="value gold">${fmt(comboWs)}</div></div>
-    <div class="summary-item"><div class="label">Combo Client Setup</div><div class="value gold">${fmt(comboCs)}</div></div>
+    <div class="summary-item sales-only"><div class="label">Core W. Setup</div><div class="value">${fmt(coreWs)}</div></div>
+    <div class="summary-item sales-only"><div class="label">Plus W. Setup</div><div class="value">${fmt(secWs)}</div></div>
+    <div class="summary-item sales-only"><div class="label">Combo W. Setup</div><div class="value gold">${fmt(comboWs)}</div></div>
+    <div class="summary-item"><div class="label">Bundle Client Setup</div><div class="value gold">${fmt(comboCs)}</div></div>
+    <div class="summary-item"><div class="label">Bundle Client Monthly</div><div class="value gold">${fmt(comboCm)}</div></div>
     <div class="summary-item"><div class="label">Total Bundle Savings</div><div class="value green">${fmt(totalBundleSavingsSetup)}</div></div>
   `;
+}
+
+// ========== CLIENT / SALES VIEW TOGGLE ==========
+function toggleView(){
+  const isClient = document.body.classList.toggle('client-mode');
+  const btn = document.getElementById('view-toggle');
+  btn.textContent = isClient ? '← Sales View' : 'Client View';
+  if(isClient){
+    const tab4btn = document.querySelector('[data-tab="tab4"]');
+    if(tab4btn && !tab4btn.classList.contains('active')) tab4btn.click();
+  }
+  renderTab4();
 }
 
 // ========== GLOBAL UPDATE ==========
