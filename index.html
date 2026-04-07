@@ -215,6 +215,45 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 <button class="view-toggle-btn" id="view-toggle" onclick="toggleView()">Client View</button>
 <button class="logout-btn" onclick="logout()">Log Out</button>
 
+<!-- SALES ONLY: global pricing config — visible on all tabs -->
+<div class="card sales-only">
+  <h3>Pricing Setup</h3>
+  <div class="pricing-flow">
+    <div class="pf-step"><div class="pf-num">1</div><div class="pf-label">Dev Cost</div><div class="pf-sub">Hours × Rate</div></div>
+    <div class="pf-arrow">+ Agency Margin →</div>
+    <div class="pf-step"><div class="pf-num">2</div><div class="pf-label">Wholesale Price</div><div class="pf-sub">Your price to resell</div></div>
+    <div class="pf-arrow">= Client Price →</div>
+    <div class="pf-step"><div class="pf-num">3</div><div class="pf-label">Client Price</div><div class="pf-sub">What the client pays</div></div>
+  </div>
+  <div class="input-grid">
+    <div class="field">
+      <label>Dev Rate ($/hr)</label>
+      <input type="number" id="cfg-r" value="105" step="0.50" min="0">
+      <span class="hint">Hourly cost to build &amp; maintain automations (commission absorbed)</span>
+    </div>
+    <div class="field">
+      <label>Agency Margin %</label>
+      <input type="number" id="cfg-margin-pct" value="40" step="1" min="20" max="99">
+      <span class="hint">Your profit as agency owner (20% floor) — at 40%, a $100 dev cost becomes ~$167 wholesale</span>
+    </div>
+    <div class="field" style="opacity:.55">
+      <label>Wholesale Multiplier (auto)</label>
+      <input type="number" id="cfg-mu" value="1.67" step="0.1" min="1" readonly style="cursor:default">
+      <span class="hint">Auto-calculated from Agency Margin — do not edit</span>
+    </div>
+    <div class="field" style="opacity:.55">
+      <label>ScaleLogix Commission %</label>
+      <input type="number" id="cfg-phi" value="0" step="1" min="0" max="100" readonly style="cursor:default">
+      <span class="hint">Removed — absorbed into dev rate</span>
+    </div>
+    <div class="field">
+      <label>Plus Bundle Discount %</label>
+      <input type="number" id="cfg-ds" value="15" step="1" min="0" max="100">
+      <span class="hint">Discount applied when client buys Core + Plus together</span>
+    </div>
+  </div>
+</div>
+
 <div class="tabs">
   <button class="tab-btn active" data-tab="tab1">Single Item</button>
   <button class="tab-btn" data-tab="tab2">Custom Build</button>
@@ -225,45 +264,6 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 <!-- ===== TAB 1 — SINGLE ITEM ===== -->
 <div id="tab1" class="tab-content active">
   <div class="summary-bar" id="t1-summary"></div>
-
-  <!-- SALES ONLY: internal pricing config -->
-  <div class="card sales-only">
-    <h3>Pricing Setup</h3>
-    <div class="pricing-flow">
-      <div class="pf-step"><div class="pf-num">1</div><div class="pf-label">Dev Cost</div><div class="pf-sub">Hours × Rate</div></div>
-      <div class="pf-arrow">+ Agency Margin →</div>
-      <div class="pf-step"><div class="pf-num">2</div><div class="pf-label">Wholesale Price</div><div class="pf-sub">Your price to resell</div></div>
-      <div class="pf-arrow">= Client Price →</div>
-      <div class="pf-step"><div class="pf-num">3</div><div class="pf-label">Client Price</div><div class="pf-sub">What the client pays</div></div>
-    </div>
-    <div class="input-grid">
-      <div class="field">
-        <label>Dev Rate ($/hr)</label>
-        <input type="number" id="cfg-r" value="105" step="0.50" min="0">
-        <span class="hint">Hourly cost to build &amp; maintain automations (commission absorbed)</span>
-      </div>
-      <div class="field">
-        <label>Agency Margin %</label>
-        <input type="number" id="cfg-margin-pct" value="40" step="1" min="20" max="99">
-        <span class="hint">Your profit as agency owner (20% floor) — at 40%, a $100 dev cost becomes ~$167 wholesale</span>
-      </div>
-      <div class="field" style="opacity:.55">
-        <label>Wholesale Multiplier (auto)</label>
-        <input type="number" id="cfg-mu" value="1.67" step="0.1" min="1" readonly style="cursor:default">
-        <span class="hint">Auto-calculated from Agency Margin — do not edit</span>
-      </div>
-      <div class="field" style="opacity:.55">
-        <label>ScaleLogix Commission %</label>
-        <input type="number" id="cfg-phi" value="0" step="1" min="0" max="100" readonly style="cursor:default">
-        <span class="hint">Removed — absorbed into dev rate</span>
-      </div>
-      <div class="field">
-        <label>Plus Bundle Discount %</label>
-        <input type="number" id="cfg-ds" value="15" step="1" min="0" max="100">
-        <span class="hint">Discount applied when client buys Core + Plus together</span>
-      </div>
-    </div>
-  </div>
 
   <!-- CLIENT ONLY: process explanation -->
   <div class="card client-only">
