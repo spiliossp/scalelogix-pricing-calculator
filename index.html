@@ -1542,6 +1542,9 @@ function renderTab4(){
   const dsSavingsS = roundSetup(afterEffWs * ds);
   const dsSavingsM = roundMonthly(afterEffWm * ds);
 
+  // Recommend a dev hour package based on monthly hours
+  const recPkgName = totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core');
+
   // Final prices
   const discWs = roundSetup(afterEffWs * (1 - ds));
   const discWm = roundMonthly(afterEffWm * (1 - ds));
@@ -1603,9 +1606,6 @@ function renderTab4(){
       t4bd.style.display = 'none';
     }
   }
-
-  // Recommend a dev hour package based on monthly hours
-  const recPkgName = totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core');
 
   // Summary bar
   document.getElementById('t4-summary').innerHTML = `
