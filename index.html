@@ -832,23 +832,23 @@ function loadFallbackData(){
     ]},
   ];
   INSURANCE_CORE = [
-    { name: "Speed-to-lead automation (web forms, email, SMS)", hb: 4, hm: 2 },
-    { name: "Automated intake & routing to producer / service team", hb: 4, hm: 2 },
-    { name: "Follow-up sequences (multi-touch, no fallthrough)", hb: 4, hm: 2 },
-    { name: "After-hours / overflow voice agent (optional add-on)", hb: 6.5, hm: 2.5 },
-    { name: "Service request triage (COIs, endorsements, renewals)", hb: 4, hm: 1.5 },
-    { name: "CRM setup + pipeline configuration", hb: 6.5, hm: 1.5 },
-    { name: "Owner visibility dashboard (response speed, follow-up)", hb: 6.5, hm: 2 },
-    { name: "Onboarding, training & documentation", hb: 4, hm: 0 },
-    { name: "Ongoing optimization + priority support", hb: 0, hm: 2.5 },
+    { name: "Speed-to-lead automation (web forms, email, SMS)", hb: 5.9, hm: 2.6 },
+    { name: "Automated intake & routing to producer / service team", hb: 5.9, hm: 2.6 },
+    { name: "Follow-up sequences (multi-touch, no fallthrough)", hb: 5.9, hm: 2.6 },
+    { name: "After-hours / overflow voice agent (optional add-on)", hb: 9.8, hm: 3.4 },
+    { name: "Service request triage (COIs, endorsements, renewals)", hb: 5.9, hm: 1.7 },
+    { name: "CRM setup + pipeline configuration", hb: 9.8, hm: 1.7 },
+    { name: "Owner visibility dashboard (response speed, follow-up)", hb: 9.8, hm: 2.6 },
+    { name: "Onboarding, training & documentation", hb: 5.9, hm: 0 },
+    { name: "Ongoing optimization + priority support", hb: 0, hm: 2.6 },
   ];
   INSURANCE_SECONDARY = [
-    { name: "High-intent lead sourcing setup & vendor integration", hb: 4, hm: 1.5 },
-    { name: "Demand intelligence for ads & outreach", hb: 4, hm: 2 },
-    { name: "Lead ROI clarity dashboard (source to conversion)", hb: 6.5, hm: 2 },
-    { name: "Missed-opportunity reactivation campaigns", hb: 4, hm: 2 },
-    { name: "Owner-level performance dashboards", hb: 6.5, hm: 2 },
-    { name: "Safe scaling optimization workflows", hb: 4, hm: 1.5 },
+    { name: "High-intent lead sourcing setup & vendor integration", hb: 5.9, hm: 1.7 },
+    { name: "Demand intelligence for ads & outreach", hb: 5.9, hm: 2.6 },
+    { name: "Lead ROI clarity dashboard (source to conversion)", hb: 11.7, hm: 2.6 },
+    { name: "Missed-opportunity reactivation campaigns", hb: 5.9, hm: 2.6 },
+    { name: "Owner-level performance dashboards", hb: 9.8, hm: 2.6 },
+    { name: "Safe scaling optimization workflows", hb: 5.9, hm: 1.7 },
   ];
   DEV_PACKAGES = [
     { name: "Core", hours: 10, wholesale: 500, subtitle: "Essential maintenance & small optimizations", features: ["10 dev hours / month","Bug fixes & minor tweaks","Monthly performance review","Email support","No rollover"] },
@@ -1333,9 +1333,8 @@ function renderTab4(){
       starterChecked++;
     }
   });
-  const STARTER_MIN = 4500; // Minimum $4.5K setup for Starter
-  const starterWs = Math.max(STARTER_MIN, roundSetup(wholesaleSetup(starterHb)));
-  const starterCs = Math.max(STARTER_MIN, roundSetup(clientPrice(wholesaleSetup(starterHb))));
+  const starterWs = roundSetup(wholesaleSetup(starterHb));
+  const starterCs = roundSetup(clientPrice(wholesaleSetup(starterHb)));
 
   const starterEl = document.getElementById('starter-meta');
   if(starterEl) starterEl.textContent = `${starterChecked} automations`;
@@ -1360,9 +1359,8 @@ function renderTab4(){
   const isFullCore = coreChecked === INSURANCE_CORE.length;
   const coreBundleDisc = isFullCore ? CORE_BUNDLE_DISCOUNT : 0;
   const proWsBase = wholesaleSetup(coreHb);
-  const PRO_MIN = 8500; // Minimum $8.5K setup for Pro
-  const proWs = Math.max(PRO_MIN, roundSetup(proWsBase * (1 - coreBundleDisc)));
-  const proCs = Math.max(PRO_MIN, roundSetup(clientPrice(proWsBase * (1 - coreBundleDisc))));
+  const proWs = roundSetup(proWsBase * (1 - coreBundleDisc));
+  const proCs = roundSetup(clientPrice(proWsBase * (1 - coreBundleDisc)));
   const proSavingsS = isFullCore ? roundSetup(proWsBase * coreBundleDisc) : 0;
 
   document.getElementById('core-meta').textContent = isFullCore
