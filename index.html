@@ -35,7 +35,7 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .tab-btn:hover{color:var(--purple-dark);background:rgba(121,102,162,.07)}
 .tab-btn.active{color:#FFFFFF;background:linear-gradient(135deg,var(--purple-dark),var(--purple));font-weight:600;box-shadow:0 2px 14px rgba(92,74,133,.25)}
 .tab-content{display:none}
-.tab-content.active{display:block;animation:fadeIn .3s ease}
+.tab-content.active{display:block;animation:fadeIn .3s ease;padding-bottom:24px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* Summary Bar */
@@ -78,10 +78,10 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .cat-header td{background:var(--primary) !important;font-weight:700;color:var(--purple);font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;padding:12px}
 
 /* Bottom summary */
-.bottom-summary{position:sticky;bottom:0;background:linear-gradient(135deg,var(--primary),var(--surface));border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;box-shadow:0 -4px 24px rgba(0,0,0,.3)}
+.bottom-summary{background:linear-gradient(135deg,var(--primary),var(--surface));border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;box-shadow:var(--shadow)}
 
 /* Package Cards */
-.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;padding-bottom:8px}
 .pkg-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--border-light);border-radius:var(--radius-lg);padding:26px;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
 .pkg-card:hover{transform:translateY(-2px);border-color:var(--border-light)}
 .pkg-card.featured{border-color:var(--purple);border-top:3px solid var(--purple);box-shadow:0 4px 32px rgba(121,102,162,.2)}
@@ -138,7 +138,7 @@ header p{color:var(--text-dim);font-size:.82rem;margin-top:6px;letter-spacing:.5
 .efficiency-banner .slabel{font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
 .efficiency-banner .sval{font-size:1.1rem;font-weight:700;color:var(--purple-light)}
 
-.scroll-wrap{max-height:65vh;overflow-y:auto}
+.scroll-wrap{max-height:55vh;overflow-y:auto}
 .scroll-wrap::-webkit-scrollbar{width:6px}
 .scroll-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
@@ -425,8 +425,8 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
     </div>
   </div>
   <div id="t2-pkg-rec" style="display:none"></div>
-  <div class="bottom-summary" id="t2-bottom"></div>
   <button class="view-toggle-btn sales-only" onclick="saveQuote()" style="position:static;margin-top:12px;width:100%">Save & Share Quote</button>
+  <div class="bottom-summary" id="t2-bottom"></div>
 </div>
 
 <!-- ===== TAB 3 — DEV HOUR PACKAGES ===== -->
@@ -449,7 +449,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
   <div class="summary-bar" id="t4-summary"></div>
   <div class="pkg-grid" id="t4-grid"></div>
   <div id="t4-pkg-rec" style="display:none"></div>
-  <button class="view-toggle-btn sales-only" onclick="saveQuote()" style="position:static;margin-top:12px;width:100%">Save & Share Quote</button>
+  <button class="view-toggle-btn sales-only" onclick="saveQuote()" style="position:static;margin-top:16px;width:100%">Save & Share Quote</button>
 </div>
 </div>
 
@@ -1216,9 +1216,14 @@ function buildTab3(){
       <div class="pkg-name">${pkg.name}</div>
       <div class="pkg-subtitle">${pkg.subtitle || ''}</div>
       <div class="pkg-prices">
+        ${pkg.hours > 0 ? `
         <div class="price-row sales-only"><span class="plabel">Wholesale / mo</span><span class="pval">${fmt(ws)}</span></div>
         <div class="price-row"><span class="plabel">Total Price / mo</span><span class="pval gold">${fmt(cp)}</span></div>
-        ${pkg.hours > 0 ? `<div class="price-row sales-only"><span class="plabel">Effective $/hr</span><span class="pval green">${fmt(effRate)}/hr</span></div>` : `<div class="price-row"><span class="plabel">Hours</span><span class="pval">Custom scope</span></div>`}
+        <div class="price-row sales-only"><span class="plabel">Effective $/hr</span><span class="pval green">${fmt(effRate)}/hr</span></div>
+        ` : `
+        <div class="price-row"><span class="plabel">Hours</span><span class="pval">Custom scope</span></div>
+        <div class="price-row"><span class="plabel">Pricing</span><span class="pval" style="color:var(--accent-dark)">Contact us</span></div>
+        `}
       </div>
       <ul class="pkg-items">${featuresHtml}</ul>
     </div>`;
@@ -1238,8 +1243,8 @@ function renderTab3Summary(){
   const cp = roundSetup(ws * CFG.phi);
   const effRate = pkg.hours > 0 ? (ws / pkg.hours) : 0;
   document.getElementById('t3-sel-label').textContent = pkg.hours > 0 ? `${pkg.hours} hrs / mo (${pkg.name})` : `Custom (${pkg.name})`;
-  document.getElementById('t3-sel-ws').textContent = fmt(ws);
-  document.getElementById('t3-sel-cp').textContent = fmt(cp);
+  document.getElementById('t3-sel-ws').textContent = pkg.hours > 0 ? fmt(ws) : 'Custom';
+  document.getElementById('t3-sel-cp').textContent = pkg.hours > 0 ? fmt(cp) : 'Contact us';
   document.getElementById('t3-sel-ehr').textContent = pkg.hours > 0 ? fmt(effRate) + '/hr' : '—';
   shimmerSummary(document.getElementById('t3-summary'));
   flashValues(document.getElementById('t3-summary'));
