@@ -167,7 +167,12 @@ body.client-mode .client-only{display:block!important}
 .pw-input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(121,102,162,.12)}
 .pw-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--purple-dark),var(--purple));color:#fff;border:none;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:.4px;transition:opacity .2s;margin-bottom:10px}
 .pw-btn:hover{opacity:.88}
+.pw-btn:disabled{opacity:.5;cursor:not-allowed}
 .pw-error{font-size:.76rem;color:var(--red);margin-top:4px;display:none;letter-spacing:.2px}
+.pw-status{font-size:.76rem;margin-top:4px;display:none;letter-spacing:.2px;transition:all .3s}
+.pw-status.verifying{display:block;color:var(--purple)}
+.pw-status.success{display:block;color:var(--green)}
+.pw-status.fail{display:block;color:var(--red)}
 .pw-footer{font-size:.68rem;color:var(--text-dim);margin-top:20px;opacity:.6}
 
 /* ─── Value update animations ─── */
@@ -293,7 +298,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
     <input type="password" class="pw-input" id="pw-input" placeholder="••••••••••" autocomplete="off"
       onkeydown="if(event.key==='Enter')handleLogin()">
     <button class="pw-btn" onclick="handleLogin()">Access Calculator</button>
-    <div class="pw-error" id="pw-error">Incorrect access code — please try again</div>
+    <div class="pw-status" id="pw-status"></div>
     <div class="pw-footer">ScaleLogix AI · Confidential</div>
   </div>
 </div>
@@ -482,10 +487,18 @@ const AUTH_ACCOUNTS = [
   { email: 'client@scalelogix.ai', role: 'client' },
 ];
 
+function setLoginStatus(state, msg){
+  const el = document.getElementById('pw-status');
+  el.className = 'pw-status ' + state;
+  el.textContent = msg;
+}
+
 async function handleLogin(){
   const password = document.getElementById('pw-input').value.trim();
-  const errEl = document.getElementById('pw-error');
-  if(!password){ errEl.textContent = 'Please enter an access code'; errEl.style.display = 'block'; return; }
+  if(!password){ setLoginStatus('fail', 'Please enter an access code'); return; }
+
+  setLoginStatus('verifying', 'Verifying access code...');
+  document.querySelector('.pw-btn').disabled = true;
 
   // Try Supabase auth first
   if(sb && !offlineMode){
@@ -493,8 +506,9 @@ async function handleLogin(){
       for(const acct of AUTH_ACCOUNTS){
         const { data, error } = await sb.auth.signInWithPassword({ email: acct.email, password });
         if(!error && data?.user){
-          errEl.style.display = 'none';
+          setLoginStatus('success', 'Access granted — loading calculator...');
           await initSession(data.user);
+          document.querySelector('.pw-btn').disabled = false;
           return;
         }
       }
@@ -503,20 +517,22 @@ async function handleLogin(){
     }
   }
 
-  // Fallback: hardcoded passwords (works even if Supabase is down)
+  // Fallback: hardcoded passwords
   if(password === FALLBACK_SALES_PW){
-    errEl.style.display = 'none';
+    setLoginStatus('success', 'Access granted — loading calculator...');
     await initFallbackSession('sales');
+    document.querySelector('.pw-btn').disabled = false;
     return;
   }
   if(password === FALLBACK_CLIENT_PW){
-    errEl.style.display = 'none';
+    setLoginStatus('success', 'Access granted — loading calculator...');
     await initFallbackSession('client');
+    document.querySelector('.pw-btn').disabled = false;
     return;
   }
 
-  errEl.textContent = 'Incorrect access code — please try again';
-  errEl.style.display = 'block';
+  setLoginStatus('fail', 'Incorrect access code — please try again');
+  document.querySelector('.pw-btn').disabled = false;
   document.getElementById('pw-input').value = '';
   document.getElementById('pw-input').focus();
 }
