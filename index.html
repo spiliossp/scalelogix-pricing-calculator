@@ -1252,6 +1252,7 @@ function renderTab3Summary(){
 
 // ========== TAB 4 — OFFERS ==========
 let insStarterCbs = [], insCoreCbs = [], insSecCbs = [];
+let selectedOfferTier = null; // 'starter', 'pro', 'max'
 
 function buildTab4(){
   const grid = document.getElementById('t4-grid');
@@ -1280,7 +1281,7 @@ function buildTab4(){
     </div>`).join('');
 
   grid.innerHTML = `
-    <div class="pkg-card">
+    <div class="pkg-card${selectedOfferTier==='starter'?' featured':''}" style="cursor:pointer" onclick="selectOfferTier('starter')">
       <div class="pkg-name">Starter</div>
       <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(92,201,142,.1);color:var(--green);border:1px solid rgba(92,201,142,.25);margin-bottom:10px">BEST FOR: Solo operators &amp; small teams getting started with AI</div>
       <div class="pkg-subtitle">Essential automations to capture leads, follow up, and never miss an opportunity</div>
@@ -1288,7 +1289,7 @@ function buildTab4(){
       <div class="ins-items-list">${starterItems}</div>
       <div class="pkg-prices" id="ins-starter-totals"></div>
     </div>
-    <div class="pkg-card">
+    <div class="pkg-card${selectedOfferTier==='pro'?' featured':''}" style="cursor:pointer" onclick="selectOfferTier('pro')">
       <div class="pkg-name">Pro</div>
       <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple);border:1px solid rgba(121,102,162,.25);margin-bottom:10px">MOST POPULAR: Growing businesses ready to automate their full pipeline</div>
       <div class="pkg-subtitle">The complete operational foundation — automates your entire client pipeline from first contact to ongoing support</div>
@@ -1296,7 +1297,7 @@ function buildTab4(){
       <div class="ins-items-list">${coreItems}</div>
       <div class="pkg-prices" id="ins-core-totals"></div>
     </div>
-    <div class="pkg-card featured">
+    <div class="pkg-card${selectedOfferTier==='max'?' featured':''}" style="cursor:pointer" onclick="selectOfferTier('max')">
       <div class="pkg-name">Max</div>
       <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple);border:1px solid rgba(121,102,162,.25);margin-bottom:10px">BEST VALUE: Agencies &amp; multi-location businesses scaling fast</div>
       <div class="pkg-subtitle">Pro + growth intelligence — advanced revenue systems, sourcing, and analytics layered on top</div>
@@ -1324,6 +1325,12 @@ function buildTab4(){
   insStarterCbs.forEach(cb => cb.addEventListener('change', renderTab4));
   insCoreCbs.forEach(cb => cb.addEventListener('change', renderTab4));
   insSecCbs.forEach(cb => cb.addEventListener('change', renderTab4));
+}
+
+function selectOfferTier(tier){
+  selectedOfferTier = tier;
+  buildTab4();
+  renderTab4();
 }
 
 function renderTab4(){
@@ -1421,9 +1428,30 @@ function renderTab4(){
   // === ENTERPRISE: redirects to Custom Build — no pricing here ===
 
   // Monthly hours estimation for Offers
-  const offersMonthlyHm = coreHm + secHm;
-  const offersItemCount = coreChecked + secChecked;
-  showPackageRec('t4-pkg-rec', offersMonthlyHm, offersItemCount);
+  // Monthly estimation based on selected tier
+  let tierMonthlyHm = 0, tierItemCount = 0, tierName = '';
+  if(selectedOfferTier === 'starter'){
+    const sc = Math.min(4, INSURANCE_CORE.length);
+    insStarterCbs.forEach(cb => { if(cb.checked){ const item = INSURANCE_CORE[parseInt(cb.dataset.idx)]; if(item) tierMonthlyHm += item.hm; tierItemCount++; }});
+    tierName = 'Starter';
+  } else if(selectedOfferTier === 'pro'){
+    tierMonthlyHm = coreHm; tierItemCount = coreChecked; tierName = 'Pro';
+  } else if(selectedOfferTier === 'max'){
+    tierMonthlyHm = coreHm + secHm; tierItemCount = coreChecked + secChecked; tierName = 'Max';
+  }
+
+  if(selectedOfferTier && tierItemCount > 0){
+    showPackageRec('t4-pkg-rec', tierMonthlyHm, tierItemCount);
+  } else {
+    const recEl = document.getElementById('t4-pkg-rec');
+    if(recEl){
+      recEl.style.display = 'block';
+      recEl.innerHTML = `
+        <div style="background:rgba(121,102,162,.05);border:1.5px dashed rgba(121,102,162,.2);border-radius:var(--radius-lg);padding:18px 22px;margin-top:14px;text-align:center">
+          <div style="font-size:.82rem;color:var(--text-dim)">Select a package above to see your estimated monthly support hours and recommended Dev Hour Package</div>
+        </div>`;
+    }
+  }
 
   // Summary bar (setup only)
   document.getElementById('t4-summary').innerHTML = `
