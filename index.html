@@ -1139,56 +1139,66 @@ function renderTab2(){
   const effHb = totalHb * (1 - dn);
   const effHm = totalHm * (1 - dn);
 
+  // Bundle efficiency savings
   const fullWs = roundSetup(wholesaleSetup(totalHb));
   const fullWm = roundMonthly(wholesaleMonthly(totalHm));
-  const discWs = roundSetup(wholesaleSetup(effHb));
-  const discWm = roundMonthly(wholesaleMonthly(effHm));
-  const cWs = roundSetup(clientPrice(wholesaleSetup(effHb)));
-  const cWm = roundMonthly(clientPrice(wholesaleMonthly(effHm)));
-  const savingsS = fullWs - discWs;
-  const savingsM = fullWm - discWm;
+  const afterEffWs = wholesaleSetup(effHb);
+  const afterEffWm = wholesaleMonthly(effHm);
+  const effSavingsS = fullWs - roundSetup(afterEffWs);
+  const effSavingsM = fullWm - roundMonthly(afterEffWm);
   const hrsSavedBuild = Math.round((totalHb - effHb) * 10) / 10;
   const hrsSavedMonthly = Math.round((totalHm - effHm) * 10) / 10;
 
+  // Plus Bundle Discount (applies at 10+ items in Custom Build)
+  const dsApplies = n >= 10;
+  const ds = dsApplies ? CFG.ds : 0;
+  const dsSavingsS = roundSetup(afterEffWs * ds);
+  const dsSavingsM = roundMonthly(afterEffWm * ds);
+
+  // Final prices
+  const discWs = roundSetup(afterEffWs * (1 - ds));
+  const discWm = roundMonthly(afterEffWm * (1 - ds));
+  const cWs = roundSetup(clientPrice(afterEffWs * (1 - ds)));
+  const cWm = roundMonthly(clientPrice(afterEffWm * (1 - ds)));
+  const totalSavingsS = effSavingsS + dsSavingsS;
+  const totalSavingsM = effSavingsM + dsSavingsM;
+
   document.getElementById('t2-summary').innerHTML = `
     <div class="summary-item"><div class="label">Items Selected</div><div class="value">${n}</div></div>
-    <div class="summary-item"><div class="label">Bundle Efficiency</div><div class="value gold">${(dn*100).toFixed(0)}%</div></div>
+    <div class="summary-item"><div class="label">Discounts</div><div class="value gold">${(dn*100).toFixed(0)}% eff${ds > 0 ? ' + '+(ds*100).toFixed(0)+'% bundle' : ''}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Setup</div><div class="value">${fmt(discWs)}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Monthly</div><div class="value">${fmt(discWm)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
     <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">${fmt(cWm)}</div></div>
   `;
 
-  // Efficiency & savings breakdown below summary
+  // Savings breakdown below summary
   const breakdownEl = document.getElementById('t2-breakdown');
   if(breakdownEl){
-    if(n > 1 && dn > 0){
+    if(n > 1 && (dn > 0 || ds > 0)){
       breakdownEl.style.display = 'block';
-      breakdownEl.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(92,74,133,.06),rgba(30,138,80,.04));border:1px solid rgba(121,102,162,.15);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:14px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div>
-              <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:600;margin-bottom:6px">Bundle Efficiency (${(dn*100).toFixed(0)}%)</div>
-              <div style="font-size:.82rem;color:var(--text);line-height:1.6">
-                Building ${n} items together saves <strong>${hrsSavedBuild} build hrs</strong> and <strong>${hrsSavedMonthly} monthly hrs</strong> through shared infrastructure and reusable components.
-              </div>
-            </div>
-            <div>
-              <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--green);font-weight:600;margin-bottom:6px">Your Savings</div>
-              <div style="display:flex;gap:16px;flex-wrap:wrap">
-                <div>
-                  <div style="font-size:1rem;font-weight:700;color:var(--green)">${fmt(savingsS)}</div>
-                  <div style="font-size:.68rem;color:var(--text-dim)">off setup</div>
-                </div>
-                <div>
-                  <div style="font-size:1rem;font-weight:700;color:var(--green)">${fmt(savingsM)}</div>
-                  <div style="font-size:.68rem;color:var(--text-dim)">off monthly</div>
-                </div>
-              </div>
-              <div style="font-size:.72rem;color:var(--text-dim);margin-top:6px">vs. building each item individually</div>
-            </div>
-          </div>
+      let bdHtml = `<div style="background:linear-gradient(135deg,rgba(92,74,133,.06),rgba(30,138,80,.04));border:1px solid rgba(121,102,162,.15);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:14px">`;
+      if(dn > 0){
+        bdHtml += `
+        <div style="margin-bottom:${ds > 0 ? '10px' : '0'}">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:4px">Bundle Efficiency (${(dn*100).toFixed(0)}%)</div>
+          <div style="font-size:.78rem;color:var(--text)">Building ${n} items together saves <strong>${hrsSavedBuild} build hrs</strong> + <strong>${hrsSavedMonthly} mo hrs</strong> → <strong style="color:var(--green)">${fmt(effSavingsS)} setup</strong> · <strong style="color:var(--green)">${fmt(effSavingsM)}/mo</strong></div>
         </div>`;
+      }
+      if(ds > 0){
+        bdHtml += `
+        <div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:4px">Plus Bundle Discount (${(ds*100).toFixed(0)}%)</div>
+          <div style="font-size:.78rem;color:var(--text)">10+ items qualifies for additional discount → <strong style="color:var(--green)">${fmt(dsSavingsS)} setup</strong> · <strong style="color:var(--green)">${fmt(dsSavingsM)}/mo</strong></div>
+        </div>`;
+      }
+      bdHtml += `
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(121,102,162,.12);display:flex;gap:16px">
+          <div><span style="font-size:.9rem;font-weight:700;color:var(--green)">${fmt(totalSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">total setup saved</span></div>
+          <div><span style="font-size:.9rem;font-weight:700;color:var(--green)">${fmt(totalSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">total monthly saved</span></div>
+        </div>
+      </div>`;
+      breakdownEl.innerHTML = bdHtml;
     } else {
       breakdownEl.style.display = 'none';
     }
@@ -1291,6 +1301,7 @@ const OFFER_TIERS = {
     catIndices: [0, 2, 3, 5, 6],
     maxPerCat: 2,
     maxTotal: 10,
+    plusDiscount: true,
     badge: 'MOST POPULAR: Growing businesses ready to automate their full pipeline',
     badgeColor: 'purple',
     subtitle: 'The complete operational foundation — automates your entire client pipeline'
@@ -1300,6 +1311,7 @@ const OFFER_TIERS = {
     catIndices: [0, 1, 2, 3, 4, 5, 6, 7],
     maxPerCat: 2,
     maxTotal: 16,
+    plusDiscount: true,
     badge: 'BEST VALUE: Agencies &amp; multi-location businesses scaling fast',
     badgeColor: 'purple',
     subtitle: 'Full-stack operations and growth intelligence — everything you need to scale'
@@ -1325,18 +1337,24 @@ function getOfferTierItems(tierKey){
 }
 
 function getOfferTierPreview(tierKey){
+  const tier = OFFER_TIERS[tierKey];
   const items = getOfferTierItems(tierKey);
   let totalHb = 0, totalHm = 0;
   items.forEach(e => { totalHb += e.item.hb; totalHm += e.item.hm; });
   const n = items.length;
   const dn = bundleEfficiency(n);
+  const ds = tier && tier.plusDiscount ? CFG.ds : 0;
   const effHb = totalHb * (1 - dn);
   const effHm = totalHm * (1 - dn);
-  const wsSetup = roundSetup(wholesaleSetup(effHb));
-  const wsMo = roundMonthly(wholesaleMonthly(effHm));
-  const csSetup = roundSetup(clientPrice(wholesaleSetup(effHb)));
-  const csMo = roundMonthly(clientPrice(wholesaleMonthly(effHm)));
-  return { n, totalHb, totalHm, dn, wsSetup, wsMo, csSetup, csMo };
+  const wsSetupBeforeDs = wholesaleSetup(effHb);
+  const wsMoBeforeDs = wholesaleMonthly(effHm);
+  const wsSetup = roundSetup(wsSetupBeforeDs * (1 - ds));
+  const wsMo = roundMonthly(wsMoBeforeDs * (1 - ds));
+  const csSetup = roundSetup(clientPrice(wsSetupBeforeDs * (1 - ds)));
+  const csMo = roundMonthly(clientPrice(wsMoBeforeDs * (1 - ds)));
+  const dsSavingsSetup = roundSetup(wsSetupBeforeDs * ds);
+  const dsSavingsMonthly = roundMonthly(wsMoBeforeDs * ds);
+  return { n, totalHb, totalHm, dn, ds, wsSetup, wsMo, csSetup, csMo, dsSavingsSetup, dsSavingsMonthly };
 }
 
 function buildTab4(){
@@ -1471,6 +1489,7 @@ function renderTab4(){
   }
 
   // Detail mode — compute from checked items
+  const tierConfig = OFFER_TIERS[selectedOfferTier];
   const tierItems = getOfferTierItems(selectedOfferTier);
   const states = offerCheckStates[selectedOfferTier] || {};
 
@@ -1485,21 +1504,35 @@ function renderTab4(){
 
   const n = checkedCount;
   const dn = bundleEfficiency(n);
+  const ds = tierConfig && tierConfig.plusDiscount ? CFG.ds : 0;
   const effHb = totalHb * (1 - dn);
   const effHm = totalHm * (1 - dn);
 
+  // Bundle efficiency savings
   const fullWs = roundSetup(wholesaleSetup(totalHb));
   const fullWm = roundMonthly(wholesaleMonthly(totalHm));
-  const discWs = roundSetup(wholesaleSetup(effHb));
-  const discWm = roundMonthly(wholesaleMonthly(effHm));
-  const cWs = roundSetup(clientPrice(wholesaleSetup(effHb)));
-  const cWm = roundMonthly(clientPrice(wholesaleMonthly(effHm)));
-  const savingsS = fullWs - discWs;
-  const savingsM = fullWm - discWm;
+  const afterEffWs = wholesaleSetup(effHb);
+  const afterEffWm = wholesaleMonthly(effHm);
+  const effSavingsS = fullWs - roundSetup(afterEffWs);
+  const effSavingsM = fullWm - roundMonthly(afterEffWm);
+  const hrsSavedBuild = Math.round((totalHb - effHb) * 10) / 10;
+  const hrsSavedMonthly = Math.round((totalHm - effHm) * 10) / 10;
+
+  // Plus Bundle Discount savings (applied after efficiency)
+  const dsSavingsS = roundSetup(afterEffWs * ds);
+  const dsSavingsM = roundMonthly(afterEffWm * ds);
+
+  // Final prices
+  const discWs = roundSetup(afterEffWs * (1 - ds));
+  const discWm = roundMonthly(afterEffWm * (1 - ds));
+  const cWs = roundSetup(clientPrice(afterEffWs * (1 - ds)));
+  const cWm = roundMonthly(clientPrice(afterEffWm * (1 - ds)));
+  const totalSavingsS = effSavingsS + dsSavingsS;
+  const totalSavingsM = effSavingsM + dsSavingsM;
 
   // Update detail meta
   const metaEl = document.getElementById('offer-detail-meta');
-  if(metaEl) metaEl.textContent = `${checkedCount} automations · ${(dn*100).toFixed(0)}% bundle efficiency`;
+  if(metaEl) metaEl.textContent = `${checkedCount} automations · ${(dn*100).toFixed(0)}% efficiency${ds > 0 ? ' + '+(ds*100).toFixed(0)+'% bundle discount' : ''}`;
 
   // Update detail totals
   const totalsEl = document.getElementById('offer-detail-totals');
@@ -1510,11 +1543,28 @@ function renderTab4(){
       <div class="price-row"><span class="plabel">Setup Price</span><span class="pval gold">${fmt(cWs)}</span></div>
       <div class="price-row"><span class="plabel">Monthly Price</span><span class="pval gold">${fmt(cWm)}</span></div>
     `;
-    if(savingsS > 0 || savingsM > 0){
+    // Savings breakdown
+    if(dn > 0 || ds > 0){
+      html += `<div style="margin-top:12px;padding:12px;background:linear-gradient(135deg,rgba(92,74,133,.06),rgba(30,138,80,.04));border:1px solid rgba(121,102,162,.15);border-radius:var(--radius)">`;
+      if(dn > 0){
+        html += `
+        <div style="margin-bottom:${ds > 0 ? '10px' : '0'}">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:4px">Bundle Efficiency (${(dn*100).toFixed(0)}%)</div>
+          <div style="font-size:.78rem;color:var(--text)">Saves <strong>${hrsSavedBuild} build hrs</strong> + <strong>${hrsSavedMonthly} mo hrs</strong> → <strong style="color:var(--green)">${fmt(effSavingsS)} setup</strong> · <strong style="color:var(--green)">${fmt(effSavingsM)}/mo</strong></div>
+        </div>`;
+      }
+      if(ds > 0){
+        html += `
+        <div>
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:4px">Plus Bundle Discount (${(ds*100).toFixed(0)}%)</div>
+          <div style="font-size:.78rem;color:var(--text)">Additional package discount → <strong style="color:var(--green)">${fmt(dsSavingsS)} setup</strong> · <strong style="color:var(--green)">${fmt(dsSavingsM)}/mo</strong></div>
+        </div>`;
+      }
       html += `
-      <div class="savings-banner">
-        <div class="slabel">Bundle savings</div>
-        <div class="sval">${fmt(savingsS)} setup · ${fmt(savingsM)}/mo saved</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(121,102,162,.12);display:flex;gap:16px">
+          <div><span style="font-size:.9rem;font-weight:700;color:var(--green)">${fmt(totalSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">total setup saved</span></div>
+          <div><span style="font-size:.9rem;font-weight:700;color:var(--green)">${fmt(totalSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">total monthly saved</span></div>
+        </div>
       </div>`;
     }
     totalsEl.innerHTML = html;
