@@ -445,6 +445,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 <!-- ===== TAB 4 — OFFERS ===== -->
 <div id="tab4" class="tab-content">
   <div class="summary-bar" id="t4-summary"></div>
+  <div id="t4-breakdown" style="display:none"></div>
   <div id="t4-pkg-rec" style="display:none"></div>
   <button class="view-toggle-btn sales-only" onclick="saveQuote()" style="position:static;margin-top:8px;margin-bottom:16px;width:100%">Save & Share Quote</button>
   <div class="pkg-grid" id="t4-grid"></div>
@@ -1474,7 +1475,10 @@ function renderTab4(){
   });
 
   if(!selectedOfferTier){
-    // Overview mode — compute summary for all tiers
+    // Overview mode — hide breakdown boxes
+    const t4bdOv = document.getElementById('t4-breakdown');
+    if(t4bdOv) t4bdOv.style.display = 'none';
+    // Compute summary for all tiers
     const starterP = getOfferTierPreview('starter');
     const proP = getOfferTierPreview('pro');
     const maxP = getOfferTierPreview('max');
@@ -1548,45 +1552,53 @@ function renderTab4(){
   const metaEl = document.getElementById('offer-detail-meta');
   if(metaEl) metaEl.textContent = `${checkedCount} of ${tierItems.length} automations selected`;
 
-  // Update detail totals
+  // Update detail totals (pricing grid only)
   const totalsEl = document.getElementById('offer-detail-totals');
   if(totalsEl){
-    let html = `
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius);margin-bottom:12px">
+    totalsEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius)">
         <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Setup</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(discWs)}</div></div>
         <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Monthly</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(discWm)}</div></div>
         <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Setup Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWs)}</div></div>
         <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Monthly Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWm)}</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Setup Saved</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">${fmt(totalSavingsS)}</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Monthly Saved</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">${fmt(totalSavingsM)}</div></div>
-      </div>
-    `;
-
-    if(dn > 0){
-      html += `
-      <div style="margin-top:12px;background:rgba(92,74,133,.06);border:1px solid rgba(121,102,162,.15);border-radius:var(--radius);padding:14px 18px">
-        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:6px">Bundle Efficiency</div>
-        <div style="font-size:.82rem;color:var(--text);line-height:1.6">Building ${n} items together saves <strong>${hrsSavedBuild} build hrs</strong> and <strong>${hrsSavedMonthly} monthly hrs</strong> through shared infrastructure and reusable components.</div>
-        <div style="display:flex;gap:16px;margin-top:8px">
-          <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(effSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">setup saved</span></div>
-          <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(effSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">monthly saved</span></div>
-        </div>
       </div>`;
-    }
+  }
 
-    if(ds > 0){
-      html += `
-      <div style="margin-top:10px;background:rgba(30,138,80,.04);border:1px solid rgba(30,138,80,.15);border-radius:var(--radius);padding:14px 18px">
-        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--green);font-weight:600;margin-bottom:6px">Cross-Bundle Feature Discount</div>
-        <div style="font-size:.82rem;color:var(--text);line-height:1.6">Combining automations across multiple categories qualifies for an additional package discount on the combined build.</div>
-        <div style="display:flex;gap:16px;margin-top:8px">
-          <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(dsSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">setup saved</span></div>
-          <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(dsSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">monthly saved</span></div>
-        </div>
-      </div>`;
-    }
+  // Savings breakdown boxes at top of page (same position as Custom Build)
+  const t4bd = document.getElementById('t4-breakdown');
+  if(t4bd){
+    if(n > 1 && (dn > 0 || ds > 0)){
+      t4bd.style.display = 'block';
+      let bdHtml = '';
 
-    totalsEl.innerHTML = html;
+      if(dn > 0){
+        bdHtml += `
+        <div style="background:rgba(92,74,133,.06);border:1px solid rgba(121,102,162,.15);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:10px">
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--purple);font-weight:600;margin-bottom:6px">Bundle Efficiency</div>
+          <div style="font-size:.82rem;color:var(--text);line-height:1.6">Building ${n} items together saves <strong>${hrsSavedBuild} build hrs</strong> and <strong>${hrsSavedMonthly} monthly hrs</strong> through shared infrastructure and reusable components.</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(effSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">setup saved</span></div>
+            <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(effSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">monthly saved</span></div>
+          </div>
+        </div>`;
+      }
+
+      if(ds > 0){
+        bdHtml += `
+        <div style="background:rgba(30,138,80,.04);border:1px solid rgba(30,138,80,.15);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:10px">
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--green);font-weight:600;margin-bottom:6px">Cross-Bundle Feature Discount</div>
+          <div style="font-size:.82rem;color:var(--text);line-height:1.6">Combining automations across multiple categories qualifies for an additional package discount on the combined build.</div>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(dsSavingsS)}</span> <span style="font-size:.68rem;color:var(--text-dim)">setup saved</span></div>
+            <div><span style="font-size:.95rem;font-weight:700;color:var(--green)">${fmt(dsSavingsM)}</span> <span style="font-size:.68rem;color:var(--text-dim)">monthly saved</span></div>
+          </div>
+        </div>`;
+      }
+
+      t4bd.innerHTML = bdHtml;
+    } else {
+      t4bd.style.display = 'none';
+    }
   }
 
   // Summary bar
