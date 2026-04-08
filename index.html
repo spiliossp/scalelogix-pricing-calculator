@@ -417,8 +417,6 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
               <th>Tier</th>
               <th>Build Hrs</th>
               <th>Mo. Hrs</th>
-              <th class="sales-only">W Setup</th>
-              <th class="sales-only">W Monthly</th>
             </tr>
           </thead>
           <tbody id="t2-body"></tbody>
@@ -1099,7 +1097,7 @@ function buildTab2Table(){
   let idx = 0;
   let catIdx = 0;
   CAPABILITIES.forEach(cat => {
-    html += `<tr class="cat-header" id="cat-hdr-${catIdx}"><td colspan="7">${cat.cat}</td></tr>`;
+    html += `<tr class="cat-header" id="cat-hdr-${catIdx}"><td colspan="5">${cat.cat}</td></tr>`;
     catIdx++;
     cat.items.forEach(item => {
       const ws = roundSetup(wholesaleSetup(item.hb));
@@ -1111,8 +1109,6 @@ function buildTab2Table(){
         <td><span class="badge ${item.tier}">${item.tier}</span></td>
         <td>${item.hb}</td>
         <td>${item.hm}</td>
-        <td class="sales-only">${fmt(ws)}</td>
-        <td class="sales-only">${fmt(wm)}</td>
       </tr>`;
       idx++;
     });
@@ -1169,8 +1165,6 @@ function renderTab2(){
     cat.items.forEach(item => {
       if(rows[ri]){
         const cells = rows[ri].querySelectorAll('td');
-        cells[5].textContent = fmt(roundSetup(wholesaleSetup(item.hb)));
-        cells[6].textContent = fmt(roundMonthly(wholesaleMonthly(item.hm)));
       }
       ri++;
     });
