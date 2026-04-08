@@ -1226,7 +1226,7 @@ function renderTab3Summary(){
 }
 
 // ========== TAB 4 — OFFERS ==========
-let insCoreCbs = [], insSecCbs = [];
+let insStarterCbs = [], insCoreCbs = [], insSecCbs = [];
 
 function buildTab4(){
   const grid = document.getElementById('t4-grid');
@@ -1245,45 +1245,86 @@ function buildTab4(){
       <span class="ihours">${item.hb}b / ${item.hm}m</span>
     </div>`).join('');
 
+  // Split Core into Starter (first 4) and rest for Pro (all 9)
+  const starterCount = Math.min(4, INSURANCE_CORE.length);
+  const starterItems = INSURANCE_CORE.slice(0, starterCount).map((item, i) => `
+    <div class="ins-item">
+      <input type="checkbox" class="ins-starter-cb" data-idx="${i}" checked>
+      <span class="iname">${item.name}</span>
+      <span class="ihours">${item.hb}b</span>
+    </div>`).join('');
+
   grid.innerHTML = `
     <div class="pkg-card">
+      <div class="pkg-name">Starter</div>
+      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(92,201,142,.1);color:var(--green);border:1px solid rgba(92,201,142,.25);margin-bottom:10px">BEST FOR: Solo operators &amp; small teams getting started with AI</div>
+      <div class="pkg-subtitle">Essential automations to capture leads, follow up, and never miss an opportunity</div>
+      <div class="pkg-discount" id="starter-meta">${starterCount} core automations</div>
+      <div class="ins-items-list">${starterItems}</div>
+      <div class="pkg-prices" id="ins-starter-totals"></div>
+    </div>
+    <div class="pkg-card">
       <div class="pkg-name">Pro</div>
-      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(92,201,142,.1);color:var(--green);border:1px solid rgba(92,201,142,.25);margin-bottom:10px">BEST FOR: Small teams &amp; solo operators getting started with AI</div>
-      <div class="pkg-subtitle">The operational foundation — automates your entire client pipeline from first contact to ongoing support</div>
+      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple);border:1px solid rgba(121,102,162,.25);margin-bottom:10px">MOST POPULAR: Growing businesses ready to automate their full pipeline</div>
+      <div class="pkg-subtitle">The complete operational foundation — automates your entire client pipeline from first contact to ongoing support</div>
       <div class="pkg-discount" id="core-meta">${(CORE_BUNDLE_DISCOUNT*100).toFixed(0)}% Bundle Discount · ${INSURANCE_CORE.length} automations</div>
       <div class="ins-items-list">${coreItems}</div>
       <div class="pkg-prices" id="ins-core-totals"></div>
     </div>
     <div class="pkg-card featured">
       <div class="pkg-name">Max</div>
-      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple);border:1px solid rgba(121,102,162,.25);margin-bottom:10px">BEST VALUE: Growing agencies &amp; multi-location businesses scaling fast</div>
+      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple);border:1px solid rgba(121,102,162,.25);margin-bottom:10px">BEST VALUE: Agencies &amp; multi-location businesses scaling fast</div>
       <div class="pkg-subtitle">Pro + growth intelligence — advanced revenue systems, sourcing, and analytics layered on top</div>
       <div class="pkg-discount" id="bundle-meta">${INSURANCE_CORE.length + INSURANCE_SECONDARY.length} automations included</div>
       <div class="ins-items-list">${coreItems}${secItems}</div>
       <div class="pkg-prices" id="ins-combo-totals"></div>
     </div>
-    <div class="pkg-card">
+    <div class="pkg-card" style="cursor:pointer" onclick="document.querySelector('[data-tab=\\'tab2\\']').click()">
       <div class="pkg-name">Enterprise</div>
-      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(187,133,117,.1);color:var(--accent-dark);border:1px solid rgba(187,133,117,.25);margin-bottom:10px">BEST FOR: Established firms with 5+ locations or complex compliance needs</div>
-      <div class="pkg-subtitle">Everything in Max plus dedicated dev resources, custom integrations, and white-glove onboarding</div>
-      <div class="pkg-discount" id="plus-meta">All ${INSURANCE_CORE.length + INSURANCE_SECONDARY.length} automations + custom scope</div>
-      <div class="ins-items-list">${coreItems}${secItems}</div>
-      <div class="pkg-prices" id="ins-sec-totals"></div>
-      <div style="background:rgba(187,133,117,.08);border:1px solid rgba(187,133,117,.2);border-radius:var(--radius);padding:14px;text-align:center;margin-top:14px">
-        <div style="font-size:.72rem;color:var(--accent-dark);font-weight:600;letter-spacing:.3px">Custom Scope — Contact Us</div>
-        <div style="font-size:.68rem;color:var(--text-dim);margin-top:4px">Dedicated dev team, custom SLA, priority support, strategic planning</div>
+      <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;background:rgba(187,133,117,.1);color:var(--accent-dark);border:1px solid rgba(187,133,117,.25);margin-bottom:10px">BEST FOR: Established firms with 5+ locations or complex needs</div>
+      <div class="pkg-subtitle">Fully custom — pick exactly what you need from our full capability catalog</div>
+      <div class="pkg-discount" id="plus-meta">80+ automations available</div>
+      <div style="text-align:center;padding:24px 0;margin:14px 0">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--accent-dark);margin-bottom:8px">Custom Build</div>
+        <div style="font-size:.78rem;color:var(--text-dim);line-height:1.6;max-width:260px;margin:0 auto">Select from 80+ automations across 16 categories. Dedicated dev team, custom SLA, white-glove onboarding.</div>
+        <div style="margin-top:14px;display:inline-block;padding:8px 20px;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;border-radius:8px;font-size:.78rem;font-weight:600;letter-spacing:.3px">Open Custom Builder →</div>
       </div>
+      <div class="pkg-prices" id="ins-sec-totals"></div>
     </div>
   `;
 
+  insStarterCbs = document.querySelectorAll('.ins-starter-cb');
   insCoreCbs = document.querySelectorAll('.ins-core-cb');
   insSecCbs = document.querySelectorAll('.ins-sec-cb');
+  insStarterCbs.forEach(cb => cb.addEventListener('change', renderTab4));
   insCoreCbs.forEach(cb => cb.addEventListener('change', renderTab4));
   insSecCbs.forEach(cb => cb.addEventListener('change', renderTab4));
 }
 
 function renderTab4(){
-  // === PRO: Core items with bundle efficiency discount ===
+  // === STARTER: first 4 Core items ===
+  let starterHb = 0, starterChecked = 0;
+  const starterCount = Math.min(4, INSURANCE_CORE.length);
+  insStarterCbs.forEach(cb => {
+    if(cb.checked){
+      const item = INSURANCE_CORE[parseInt(cb.dataset.idx)];
+      if(item) starterHb += item.hb;
+      starterChecked++;
+    }
+  });
+  const starterWs = roundSetup(wholesaleSetup(starterHb));
+  const starterCs = roundSetup(clientPrice(wholesaleSetup(starterHb)));
+
+  const starterEl = document.getElementById('starter-meta');
+  if(starterEl) starterEl.textContent = `${starterChecked} automations`;
+
+  const starterTotalsEl = document.getElementById('ins-starter-totals');
+  if(starterTotalsEl) starterTotalsEl.innerHTML = `
+    <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(starterWs)}</span></div>
+    <div class="price-row"><span class="plabel">Setup Investment</span><span class="pval gold">${fmt(starterCs)}</span></div>
+  `;
+
+  // === PRO: All Core items with bundle efficiency discount ===
   let coreHb = 0, coreHm = 0, coreChecked = 0;
   insCoreCbs.forEach(cb => {
     if(cb.checked){
@@ -1350,23 +1391,16 @@ function renderTab4(){
   }
   document.getElementById('ins-combo-totals').innerHTML = maxHtml;
 
-  // === ENTERPRISE: custom scope — no fixed price ===
-  document.getElementById('plus-meta').textContent = `All ${coreChecked + secChecked} automations + custom scope`;
-
-  document.getElementById('ins-sec-totals').innerHTML = `
-    <div style="text-align:center;padding:14px 0;margin:10px 0;background:rgba(187,133,117,.06);border-radius:var(--radius);border:1px solid rgba(187,133,117,.15)">
-      <div style="font-size:.88rem;font-weight:700;color:var(--accent-dark)">Custom Scope</div>
-      <div style="font-size:.7rem;color:var(--text-dim);margin-top:4px">Includes everything in Max + dedicated resources — contact us for pricing</div>
-    </div>
-  `;
+  // === ENTERPRISE: redirects to Custom Build — no pricing here ===
 
   // Summary bar (setup only)
   document.getElementById('t4-summary').innerHTML = `
-    <div class="summary-item sales-only"><div class="label">Pro W. Setup</div><div class="value">${fmt(proWs)}</div></div>
-    <div class="summary-item sales-only"><div class="label">Max W. Setup</div><div class="value gold">${fmt(maxWs)}</div></div>
+    <div class="summary-item"><div class="label">Starter Setup</div><div class="value">${fmt(starterCs)}</div></div>
     <div class="summary-item"><div class="label">Pro Setup</div><div class="value gold">${fmt(proCs)}</div></div>
     <div class="summary-item"><div class="label">Max Setup</div><div class="value gold">${fmt(maxCs)}</div></div>
-    <div class="summary-item"><div class="label">Total Savings</div><div class="value green">${fmt(maxSavingsS)}</div></div>
+    <div class="summary-item sales-only"><div class="label">Pro W. Setup</div><div class="value">${fmt(proWs)}</div></div>
+    <div class="summary-item sales-only"><div class="label">Max W. Setup</div><div class="value">${fmt(maxWs)}</div></div>
+    <div class="summary-item"><div class="label">Max Savings</div><div class="value green">${fmt(maxSavingsS)}</div></div>
   `;
   shimmerSummary(document.getElementById('t4-summary'));
   flashValues(document.getElementById('t4-summary'));
