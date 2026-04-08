@@ -1249,16 +1249,18 @@ let offerCheckStates = {}; // tier -> { globalItemIdx: boolean }
 const OFFER_TIERS = {
   starter: {
     name: 'Starter',
-    catIndices: [0, 5],
-    maxPerCat: 3,
+    catIndices: [0, 3, 5],
+    maxPerCat: 2,
+    maxTotal: 4,
     badge: 'BEST FOR: Solo operators &amp; small teams getting started with AI',
     badgeColor: 'green',
     subtitle: 'Essential automations to capture leads, follow up, and never miss an opportunity'
   },
   pro: {
     name: 'Pro',
-    catIndices: [0, 2, 3, 5],
-    maxPerCat: 3,
+    catIndices: [0, 2, 3, 5, 6],
+    maxPerCat: 2,
+    maxTotal: 10,
     badge: 'MOST POPULAR: Growing businesses ready to automate their full pipeline',
     badgeColor: 'purple',
     subtitle: 'The complete operational foundation — automates your entire client pipeline'
@@ -1266,7 +1268,8 @@ const OFFER_TIERS = {
   max: {
     name: 'Max',
     catIndices: [0, 1, 2, 3, 4, 5, 6, 7],
-    maxPerCat: 3,
+    maxPerCat: 2,
+    maxTotal: 16,
     badge: 'BEST VALUE: Agencies &amp; multi-location businesses scaling fast',
     badgeColor: 'purple',
     subtitle: 'Full-stack operations and growth intelligence — everything you need to scale'
@@ -1278,9 +1281,12 @@ function getOfferTierItems(tierKey){
   if(!tier) return [];
   const items = [];
   const maxPerCat = tier.maxPerCat || 999;
+  const maxTotal = tier.maxTotal || 999;
   tier.catIndices.forEach(ci => {
+    if(items.length >= maxTotal) return;
     if(CAPABILITIES[ci]){
       CAPABILITIES[ci].items.slice(0, maxPerCat).forEach((item, ii) => {
+        if(items.length >= maxTotal) return;
         items.push({ item, catIdx: ci, itemIdx: ii, globalKey: ci + '-' + ii, catName: CAPABILITIES[ci].cat });
       });
     }
