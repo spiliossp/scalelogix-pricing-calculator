@@ -1301,6 +1301,8 @@ const OFFER_TIERS = {
     catIndices: [0, 3, 5],
     maxPerCat: 2,
     maxTotal: 4,
+    suggestedPkg: 'Core',
+    suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams getting started with AI',
     badgeColor: 'green',
     subtitle: 'Essential automations to capture leads, follow up, and never miss an opportunity'
@@ -1311,6 +1313,8 @@ const OFFER_TIERS = {
     maxPerCat: 2,
     maxTotal: 10,
     plusDiscount: true,
+    suggestedPkg: 'Plus',
+    suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses ready to automate their full pipeline',
     badgeColor: 'purple',
     subtitle: 'The complete operational foundation — automates your entire client pipeline'
@@ -1321,6 +1325,8 @@ const OFFER_TIERS = {
     maxPerCat: 2,
     maxTotal: 16,
     plusDiscount: true,
+    suggestedPkg: 'Custom',
+    suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies &amp; multi-location businesses scaling fast',
     badgeColor: 'purple',
     subtitle: 'Full-stack operations and growth intelligence — everything you need to scale'
@@ -1542,8 +1548,9 @@ function renderTab4(){
   const dsSavingsS = roundSetup(afterEffWs * ds);
   const dsSavingsM = roundMonthly(afterEffWm * ds);
 
-  // Recommend a dev hour package based on monthly hours
-  const recPkgName = totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core');
+  // Recommended dev hour package — tied to the tier, not calculated from hours
+  const recPkgName = tierConfig.suggestedPkg || (totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core'));
+  const recPkgHrs = tierConfig.suggestedHrs || 0;
 
   // Final prices
   const discWs = roundSetup(afterEffWs * (1 - ds));
@@ -1564,8 +1571,7 @@ function renderTab4(){
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius)">
         <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Setup</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(discWs)}</div></div>
         <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Total Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWs)}</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Est. Monthly Hours</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${Math.round(totalHm)} hrs</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Suggested Package</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple);cursor:pointer;text-decoration:underline" onclick="document.querySelector('[data-tab=\\'tab3\\']').click()">${recPkgName} →</div></div>
+        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Retainer Package</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple);cursor:pointer;text-decoration:underline" onclick="document.querySelector('[data-tab=\\'tab3\\']').click()">${recPkgName}${recPkgHrs > 0 ? ' ('+recPkgHrs+' hrs/mo)' : ''} →</div></div>
         <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Setup Saved</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">${fmt(totalSavingsS)}</div></div>
       </div>`;
   }
@@ -1612,8 +1618,7 @@ function renderTab4(){
     <div class="summary-item"><div class="label">${OFFER_TIERS[selectedOfferTier].name} Items</div><div class="value">${n}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Setup</div><div class="value">${fmt(discWs)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
-    <div class="summary-item"><div class="label">Est. Monthly Hrs</div><div class="value gold">${Math.round(totalHm)} hrs</div></div>
-    <div class="summary-item"><div class="label">Suggested Package</div><div class="value" style="color:var(--purple)">${recPkgName}</div></div>
+    <div class="summary-item"><div class="label">Retainer</div><div class="value gold">${recPkgName}${recPkgHrs > 0 ? ' ('+recPkgHrs+' hrs)' : ''}</div></div>
     <div class="summary-item"><div class="label">Setup Saved</div><div class="value green">${fmt(totalSavingsS)}</div></div>
   `;
 
