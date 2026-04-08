@@ -1383,10 +1383,10 @@ function buildTab4(){
       <div class="pkg-name">${tier.name}</div>
       <div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;${badgeBg};margin-bottom:10px">${tier.badge}</div>
       <div class="pkg-subtitle">${tier.subtitle}</div>
-      <div class="pkg-discount">${preview.n} automations · ${(preview.dn*100).toFixed(0)}% efficiency</div>
+      <div class="pkg-discount">${preview.n} automations</div>
       <div class="pkg-prices">
-        <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval">${fmt(preview.wsSetup)}</span></div>
-        <div class="price-row"><span class="plabel">Setup Price</span><span class="pval gold">${fmt(preview.csSetup)}</span></div>
+        <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval" id="offer-ws-${tierKey}">${fmt(preview.wsSetup)}</span></div>
+        <div class="price-row"><span class="plabel">Setup Price</span><span class="pval gold" id="offer-cs-${tierKey}">${fmt(preview.csSetup)}</span></div>
       </div>
       ${isSelected ? '<div style="text-align:center;margin-top:10px;font-size:.7rem;color:var(--purple);font-weight:600">SELECTED ✓</div>' : ''}
     </div>`;
@@ -1464,6 +1464,15 @@ function selectOfferTier(tier){
 }
 
 function renderTab4(){
+  // Always update the tier card prices (even when a tier is selected)
+  ['starter','pro','max'].forEach(tk => {
+    const p = getOfferTierPreview(tk);
+    const wsEl = document.getElementById('offer-ws-'+tk);
+    const csEl = document.getElementById('offer-cs-'+tk);
+    if(wsEl) wsEl.textContent = fmt(p.wsSetup);
+    if(csEl) csEl.textContent = fmt(p.csSetup);
+  });
+
   if(!selectedOfferTier){
     // Overview mode — compute summary for all tiers
     const starterP = getOfferTierPreview('starter');
@@ -1490,7 +1499,6 @@ function renderTab4(){
 
     shimmerSummary(document.getElementById('t4-summary'));
     flashValues(document.getElementById('t4-summary'));
-    document.querySelectorAll('#t4-grid .pkg-card').forEach(c => shimmerCard(c));
     return;
   }
 
@@ -1642,7 +1650,6 @@ function updateAll(){
   renderTab1();
   renderTab2();
   buildTab3();
-  buildTab4();
   renderTab4();
 }
 
