@@ -426,7 +426,6 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
       </div>
     </div>
   </div>
-  <div class="bottom-summary" id="t2-bottom"></div>
 </div>
 
 <!-- ===== TAB 3 — DEV HOUR PACKAGES ===== -->
@@ -1158,14 +1157,6 @@ function renderTab2(){
     <div class="summary-item sales-only"><div class="label">Wholesale Monthly</div><div class="value">${fmt(discWm)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
     <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">${fmt(cWm)}</div></div>
-  `;
-
-  document.getElementById('t2-bottom').innerHTML = `
-    <div class="summary-item"><div class="label">Items</div><div class="value">${n}</div></div>
-    <div class="summary-item"><div class="label">Bundle Efficiency</div><div class="value gold">${(dn*100).toFixed(0)}%</div></div>
-    <div class="summary-item sales-only"><div class="label">W. Setup Total</div><div class="value">${fmt(discWs)}</div></div>
-    <div class="summary-item sales-only"><div class="label">W. Monthly Total</div><div class="value">${fmt(discWm)}</div></div>
-    <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
     <div class="summary-item"><div class="label">Setup Savings</div><div class="value green">${fmt(savingsS)}</div></div>
     <div class="summary-item"><div class="label">Monthly Savings</div><div class="value green">${fmt(savingsM)}</div></div>
   `;
@@ -1188,8 +1179,6 @@ function renderTab2(){
   showPackageRec('t2-pkg-rec', totalHm, n);
   shimmerSummary(document.getElementById('t2-summary'));
   flashValues(document.getElementById('t2-summary'));
-  flashValues(document.getElementById('t2-bottom'));
-  shimmerSummary(document.getElementById('t2-bottom'));
 }
 
 // ========== TAB 3 — DEV HOUR PACKAGES ==========
