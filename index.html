@@ -1164,14 +1164,15 @@ function renderTab2(){
   const totalSavingsS = effSavingsS + dsSavingsS;
   const totalSavingsM = effSavingsM + dsSavingsM;
 
+  const t2RecPkg = totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core');
+
   document.getElementById('t2-summary').innerHTML = `
     <div class="summary-item"><div class="label">Items Selected</div><div class="value">${n}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Setup</div><div class="value">${fmt(discWs)}</div></div>
-    <div class="summary-item sales-only"><div class="label">Wholesale Monthly</div><div class="value">${fmt(discWm)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
-    <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">${fmt(cWm)}</div></div>
+    <div class="summary-item"><div class="label">Est. Monthly Hrs</div><div class="value gold">${Math.round(totalHm)} hrs</div></div>
+    <div class="summary-item"><div class="label">Suggested Package</div><div class="value" style="color:var(--purple)">${t2RecPkg}</div></div>
     <div class="summary-item"><div class="label">Setup Saved</div><div class="value green">${fmt(totalSavingsS)}</div></div>
-    <div class="summary-item"><div class="label">Monthly Saved</div><div class="value green">${fmt(totalSavingsM)}</div></div>
   `;
 
   // Savings breakdown below summary — two separate boxes
@@ -1559,9 +1560,10 @@ function renderTab4(){
     totalsEl.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius)">
         <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Setup</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(discWs)}</div></div>
-        <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Monthly</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(discWm)}</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Setup Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWs)}</div></div>
-        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Monthly Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWm)}</div></div>
+        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Total Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(cWs)}</div></div>
+        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Est. Monthly Hours</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${Math.round(totalHm)} hrs</div></div>
+        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Suggested Package</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple);cursor:pointer;text-decoration:underline" onclick="document.querySelector('[data-tab=\\'tab3\\']').click()">${recPkgName} →</div></div>
+        <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Setup Saved</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">${fmt(totalSavingsS)}</div></div>
       </div>`;
   }
 
@@ -1602,15 +1604,17 @@ function renderTab4(){
     }
   }
 
+  // Recommend a dev hour package based on monthly hours
+  const recPkgName = totalHm > 16 ? 'Custom' : (totalHm > 7 ? 'Plus' : 'Core');
+
   // Summary bar
   document.getElementById('t4-summary').innerHTML = `
     <div class="summary-item"><div class="label">${OFFER_TIERS[selectedOfferTier].name} Items</div><div class="value">${n}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Setup</div><div class="value">${fmt(discWs)}</div></div>
-    <div class="summary-item sales-only"><div class="label">Wholesale Monthly</div><div class="value">${fmt(discWm)}</div></div>
-    <div class="summary-item"><div class="label">Setup Price</div><div class="value gold">${fmt(cWs)}</div></div>
-    <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">${fmt(cWm)}</div></div>
+    <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(cWs)}</div></div>
+    <div class="summary-item"><div class="label">Est. Monthly Hrs</div><div class="value gold">${Math.round(totalHm)} hrs</div></div>
+    <div class="summary-item"><div class="label">Suggested Package</div><div class="value" style="color:var(--purple)">${recPkgName}</div></div>
     <div class="summary-item"><div class="label">Setup Saved</div><div class="value green">${fmt(totalSavingsS)}</div></div>
-    <div class="summary-item"><div class="label">Monthly Saved</div><div class="value green">${fmt(totalSavingsM)}</div></div>
   `;
 
   // Monthly hours estimation
