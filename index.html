@@ -563,7 +563,7 @@ function applyRole(role){
     try { document.querySelector('[data-tab="tab4"]').click(); } catch(e){}
   } else {
     document.body.classList.remove('client-mode');
-    document.getElementById('view-toggle').style.display = '';
+    document.getElementById('view-toggle').style.display = 'none';
     setViewTag('sales');
   }
 }
@@ -1447,8 +1447,7 @@ async function logout(){
   isInitializing = false;
   offlineMode = false;
   document.body.classList.remove('client-mode');
-  document.getElementById('view-toggle').style.display = '';
-  document.getElementById('view-toggle').textContent = 'Client View';
+  document.getElementById('view-toggle').style.display = 'none';
   setViewTag('sales');
   document.getElementById('pw-input').value = '';
   const status = document.getElementById('pw-status');
