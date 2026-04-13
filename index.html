@@ -341,6 +341,11 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
       <input type="number" id="cfg-markup" value="100" step="5" min="20" max="300">
       <span class="hint">Default retail markup above wholesale (100% = double the wholesale price)</span>
     </div>
+    <div class="field">
+      <label>Dev Rate ($/hr)</label>
+      <input type="number" id="cfg-devrate" value="150" step="10" min="50" max="500">
+      <span class="hint">Hourly dev rate — multiplied by maintenance hours to calculate monthly cost</span>
+    </div>
   </div>
 </div>
 
@@ -707,6 +712,7 @@ function loadFallbackData(){
 const CFG = {
   get ds(){ return (parseFloat(document.getElementById('cfg-ds').value) || 15) / 100 },
   get markup(){ return (parseFloat(document.getElementById('cfg-markup').value) || 100) / 100 },
+  get devRate(){ return parseFloat(document.getElementById('cfg-devrate').value) || 150 },
 };
 
 // ========== SAVE CONFIG TO SUPABASE (debounced) ==========
@@ -730,6 +736,7 @@ function getRetail(item){ return Math.round(getWholesale(item) * (1 + CFG.markup
 function getMonthlyWs(item){ return item.moWsMin || 0 }
 function getMonthlyRt(item){ return Math.round(getMonthlyWs(item) * (1 + CFG.markup)) }
 function getMaintHrs(item){ return item.maintHrs || 0 }
+function getMaintCost(item){ return getMaintHrs(item) * CFG.devRate }
 function marginPct(retail, wholesale){ return wholesale === 0 ? 0 : ((retail - wholesale) / retail * 100) }
 
 function getServiceType(item){
@@ -1007,7 +1014,7 @@ function buildTab2Table(){
       html += `<tr>
         <td class="cb"><input type="checkbox" data-idx="${idx}" class="t2-cb"></td>
         <td>${item.name}${descHtml}</td>
-        <td style="font-size:.78rem;text-align:center;white-space:nowrap">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo' : '—'}</td>
+        <td style="font-size:.78rem;text-align:center;white-space:nowrap">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo <span style="color:var(--purple);font-weight:600">(' + fmt(mh * CFG.devRate) + '/mo)</span>' : '—'}</td>
         <td class="sales-only" style="font-size:.78rem;white-space:nowrap">${wsDisplay}</td>
         <td style="font-size:.78rem;white-space:nowrap">${rtDisplay}</td>
       </tr>`;
@@ -1058,7 +1065,7 @@ function renderTab2(){
     <div class="summary-item"><div class="label">Items Selected</div><div class="value">${n}</div></div>
     <div class="summary-item sales-only"><div class="label">Total Wholesale</div><div class="value">${fmt(finalWsSetup)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(finalRtSetup)}</div></div>
-    <div class="summary-item"><div class="label">Est. Maint.</div><div class="value">${totalMaintHrs > 0 ? totalMaintHrs + ' hrs/mo' : '—'}</div></div>
+    <div class="summary-item"><div class="label">Est. Maint.</div><div class="value">${totalMaintHrs > 0 ? totalMaintHrs + ' hrs/mo (' + fmt(totalMaintHrs * CFG.devRate) + ')' : '—'}</div></div>
     <div class="summary-item sales-only"><div class="label">Margin %</div><div class="value green">${setupMgn.toFixed(1)}%</div></div>
     ${dsApplies ? `<div class="summary-item"><div class="label">Savings</div><div class="value green">${fmt(totalSavings)}</div></div>` : ''}
   `;
@@ -1088,7 +1095,7 @@ function renderTab2(){
       recEl.style.display = 'block';
       recEl.innerHTML = `
         <div style="background:linear-gradient(135deg,rgba(92,74,133,.08),rgba(121,102,162,.04));border:1.5px solid rgba(121,102,162,.25);border-radius:var(--radius-lg);padding:16px 22px;margin-top:14px;text-align:center">
-          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:600;margin-bottom:4px">Estimated Maintenance: ${totalMaintHrs} hrs/mo</div>
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:600;margin-bottom:4px">Estimated Maintenance: ${totalMaintHrs} hrs/mo (${fmt(totalMaintHrs * CFG.devRate)}/mo)</div>
           <div style="font-size:.82rem;color:var(--text-dim)">Pair your build with a
             <span style="cursor:pointer;color:var(--purple);text-decoration:underline;font-weight:600" onclick="document.querySelector('[data-tab=\\'tab3\\']').click()">Dev Hour Package</span>
             to cover ongoing maintenance and support
@@ -1272,7 +1279,7 @@ function buildTab4(){
       <div class="pkg-prices">
         <div class="price-row sales-only"><span class="plabel">Wholesale Setup</span><span class="pval" id="offer-ws-${tierKey}">${fmt(preview.wsSetup)}</span></div>
         <div class="price-row"><span class="plabel">Setup Price</span><span class="pval gold" id="offer-rt-${tierKey}">${fmt(preview.rtSetup)}</span></div>
-        <div class="price-row"><span class="plabel">Est. Maintenance</span><span class="pval">${preview.maintHrs} hrs/mo</span></div>
+        <div class="price-row"><span class="plabel">Est. Maintenance</span><span class="pval">${preview.maintHrs} hrs/mo (${fmt(preview.maintHrs * CFG.devRate)}/mo)</span></div>
         <div class="price-row sales-only"><span class="plabel">Margin</span><span class="pval green">${preview.mgn.toFixed(1)}%</span></div>
       </div>
       ${tierItems.length > 0 ? itemListHtml : ''}
@@ -1323,7 +1330,7 @@ function buildTab4(){
       <span class="iname">${e.item.name}</span>
       <span class="ihours sales-only" style="white-space:nowrap">${ws > 0 ? fmt(ws) : '—'}</span>
       <span style="white-space:nowrap;font-size:.72rem;color:var(--purple);font-weight:600">${rt > 0 ? fmt(rt) : '—'}</span>
-      <span style="white-space:nowrap;font-size:.68rem;color:var(--text-dim)">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo' : ''}</span>
+      <span style="white-space:nowrap;font-size:.68rem;color:var(--text-dim)">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo (' + fmt(mh * CFG.devRate) + ')' : ''}</span>
     </div>`;
   });
 
@@ -1336,7 +1343,7 @@ function buildTab4(){
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius)">
           <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Wholesale Setup</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(preview.wsSetup)}</div></div>
           <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Total Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(preview.rtSetup)}</div></div>
-          <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Est. Maintenance</div><div style="font-size:1.1rem;font-weight:700;color:var(--text)">${preview.maintHrs} hrs/mo</div></div>
+          <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Est. Maintenance</div><div style="font-size:1.1rem;font-weight:700;color:var(--text)">${preview.maintHrs} hrs/mo<div style="font-size:.8rem;color:var(--purple)">${fmt(preview.maintHrs * CFG.devRate)}/mo</div></div></div>
           <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Margin</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">${preview.mgn.toFixed(1)}%</div></div>
         </div>
       </div>
@@ -1416,7 +1423,7 @@ function renderTab4(){
     <div class="summary-item"><div class="label">${tierConfig.name} Services</div><div class="value">${preview.n}</div></div>
     <div class="summary-item sales-only"><div class="label">Wholesale Setup</div><div class="value">${fmt(preview.wsSetup)}</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${fmt(preview.rtSetup)}</div></div>
-    <div class="summary-item"><div class="label">Est. Maint.</div><div class="value">${preview.maintHrs} hrs/mo</div></div>
+    <div class="summary-item"><div class="label">Est. Maint.</div><div class="value">${preview.maintHrs} hrs/mo (${fmt(preview.maintHrs * CFG.devRate)}/mo)</div></div>
     <div class="summary-item sales-only"><div class="label">Margin</div><div class="value green">${preview.mgn.toFixed(1)}%</div></div>
   `;
 
@@ -1481,7 +1488,7 @@ function updateAll(){
 }
 
 // Listen to config changes
-['cfg-ds','cfg-markup'].forEach(id => {
+['cfg-ds','cfg-markup','cfg-devrate'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('input', () => {
     updateAll();
