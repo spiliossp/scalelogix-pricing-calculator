@@ -402,9 +402,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
 <div id="tab3" class="tab-content">
   <div class="summary-bar" id="t3-summary">
     <div class="summary-item"><div class="label">Monthly Dev Hours</div><div class="value" id="t3-sel-label">—</div></div>
-    <div class="summary-item sales-only"><div class="label">Wholesale Price</div><div class="value gold" id="t3-sel-ws">—</div></div>
     <div class="summary-item"><div class="label">Total Price</div><div class="value gold" id="t3-sel-cp">—</div></div>
-    <div class="summary-item sales-only"><div class="label">Dev Rate</div><div class="value green" id="t3-sel-ehr">—</div></div>
   </div>
   <div class="card">
     <h3>Monthly Dev Hour Packages</h3>
@@ -1152,8 +1150,6 @@ function buildTab3(){
         ${pkg.hours > 0 ? `
         <div class="price-row"><span class="plabel">${pkg.hours} hrs × ${fmt(CFG.devRate)}/hr</span><span class="pval gold">${fmt(price)}/mo</span></div>
         ${pkg.discount > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">${Math.round(pkg.discount * 100)}% discount applied</span><span class="pval" style="font-size:.7rem;color:var(--text-dim);text-decoration:line-through">${fmt(Math.round(pkg.hours * CFG.devRate))}</span></div>` : ''}
-        <div class="price-row sales-only"><span class="plabel">Wholesale / mo</span><span class="pval">${fmt(ws)}</span></div>
-        <div class="price-row sales-only"><span class="plabel">Margin</span><span class="pval green">${mgn.toFixed(1)}%</span></div>
         ` : `
         <div class="price-row"><span class="plabel">Hours</span><span class="pval">Custom scope</span></div>
         <div class="price-row"><span class="plabel">Pricing</span><span class="pval" style="color:var(--accent-dark)">Contact us</span></div>
@@ -1173,12 +1169,9 @@ function selectPkg(i){
 function renderTab3Summary(){
   if(!DEV_PACKAGES.length) return;
   const pkg = DEV_PACKAGES[selectedPkg] || DEV_PACKAGES[0];
-  const ws = calcPkgWholesale(pkg);
   const price = calcPkgPrice(pkg);
   document.getElementById('t3-sel-label').textContent = pkg.hours > 0 ? `${pkg.hours} hrs / mo (${pkg.name})` : `Custom (${pkg.name})`;
-  document.getElementById('t3-sel-ws').textContent = pkg.hours > 0 ? fmt(ws) : 'Custom';
   document.getElementById('t3-sel-cp').textContent = pkg.hours > 0 ? fmt(price) + '/mo' : 'Contact us';
-  document.getElementById('t3-sel-ehr').textContent = pkg.hours > 0 ? fmt(CFG.devRate) + '/hr' : '—';
   shimmerSummary(document.getElementById('t3-summary'));
   flashValues(document.getElementById('t3-summary'));
 }
