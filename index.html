@@ -1182,7 +1182,7 @@ const OFFER_TIERS = {
       { cat: 'AI Website & Conversion', items: [0] },
       { cat: 'AI Voice Packages', items: [0] },
     ],
-    discount: 0.05,
+    fixedPrice: 4500,
     suggestedPkg: 'Core',
     suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams',
@@ -1196,7 +1196,7 @@ const OFFER_TIERS = {
       { cat: 'AI Voice Packages', items: [1] },
       { cat: 'AI CRM & Automation', items: [0] },
     ],
-    discount: 0.075,
+    fixedPrice: 9000,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1212,7 +1212,7 @@ const OFFER_TIERS = {
       { cat: 'AI Ad Management', items: [0, 1] },
       { cat: 'AI Data & Intelligence', items: [0] },
     ],
-    discount: 0.10,
+    fixedPrice: 15000,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1240,18 +1240,18 @@ function getOfferTierItems(tierKey){
 function getOfferTierPreview(tierKey){
   const tier = OFFER_TIERS[tierKey];
   const items = getOfferTierItems(tierKey);
-  let wsSetup = 0, rtSetup = 0, maintHrs = 0;
+  let wsSetup = 0, rtSum = 0, maintHrs = 0;
   items.forEach(e => {
     wsSetup += getWholesale(e.item);
-    rtSetup += getRetail(e.item);
+    rtSum += getRetail(e.item);
     maintHrs += getMaintHrs(e.item);
   });
   const n = items.length;
-  const ds = tier ? (tier.discount || 0) : 0;
-  const dsSavingsSetup = Math.round(rtSetup * ds);
-  const finalRtSetup = rtSetup - dsSavingsSetup;
+  const finalRtSetup = tier && tier.fixedPrice ? tier.fixedPrice : rtSum;
+  const dsSavingsSetup = rtSum - finalRtSetup;
+  const dsPct = rtSum > 0 ? dsSavingsSetup / rtSum : 0;
   const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
-  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSetup, maintHrs, dsSavingsSetup, mgn, ds };
+  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSum, maintHrs, dsSavingsSetup, mgn, ds: dsPct };
 }
 
 function buildTab4(){
