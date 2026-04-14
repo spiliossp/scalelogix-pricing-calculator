@@ -1196,7 +1196,7 @@ const OFFER_TIERS = {
       { cat: 'AI Voice Packages', items: [1] },
       { cat: 'AI CRM & Automation', items: [0] },
     ],
-    discount: 0.15,
+    discount: 0.075,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1212,7 +1212,7 @@ const OFFER_TIERS = {
       { cat: 'AI Ad Management', items: [0, 1] },
       { cat: 'AI Data & Intelligence', items: [0] },
     ],
-    discount: 0.25,
+    discount: 0.10,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1250,9 +1250,8 @@ function getOfferTierPreview(tierKey){
   const ds = tier ? (tier.discount || 0) : 0;
   const dsSavingsSetup = Math.round(rtSetup * ds);
   const finalRtSetup = rtSetup - dsSavingsSetup;
-  const finalWsSetup = wsSetup - Math.round(wsSetup * ds);
-  const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, finalWsSetup) : 0;
-  return { n, wsSetup: finalWsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSetup, maintHrs, dsSavingsSetup, mgn, ds };
+  const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
+  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSetup, maintHrs, dsSavingsSetup, mgn, ds };
 }
 
 function buildTab4(){
