@@ -986,7 +986,9 @@ function scrollToCat(ci){
   const header = document.getElementById('cat-hdr-'+ci);
   if(header){
     const scrollWrap = document.getElementById('t2-scroll');
-    scrollWrap.scrollTo({top: header.offsetTop - scrollWrap.offsetTop - 10, behavior:'smooth'});
+    const headerRect = header.getBoundingClientRect();
+    const wrapRect = scrollWrap.getBoundingClientRect();
+    scrollWrap.scrollTo({top: scrollWrap.scrollTop + headerRect.top - wrapRect.top - 10, behavior:'smooth'});
   }
   document.querySelectorAll('.cat-menu-item').forEach((el,i) => {
     el.classList.toggle('active', i === ci);
