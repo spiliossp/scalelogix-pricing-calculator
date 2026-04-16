@@ -617,79 +617,79 @@ function loadFallbackData(){
   offlineMode = true;
   SERVICES = [
     { cat: "Website & Funnel", type: "setup", items: [
-      { name: "AI Homepage + AI Chat + Integrations", wsMin: 1750, wsMax: 2000, rtMin: 4000, rtMax: 7500, maintHrs: 2.5, desc: "Full homepage build with AI chatbot, integrations, and conversion optimization" },
-      { name: "Additional Page (per page)", wsMin: 750, wsMax: 850, rtMin: 1000, rtMax: 1500, maintHrs: 1.5, desc: "Extra page with custom layout, copy creation, and responsive design" },
-      { name: "Landing Page + Thank-You", wsMin: 750, wsMax: 750, rtMin: 1500, rtMax: 3000, maintHrs: 1.5, desc: "Single landing page with thank-you page for campaigns and funnels" },
-      { name: "Landing Pages + Thank-You (3-4 pages)", wsMin: 1150, wsMax: 1150, rtMin: 2500, rtMax: 5000, maintHrs: 1.5, desc: "Multi-page landing funnel with thank-you pages" },
-      { name: "Starter Web Package", wsMin: 3750, wsMax: 4500, rtMin: 6500, rtMax: 10000, maintHrs: 2.5, desc: "Homepage + 3 pages + AI chat + integrations" },
-      { name: "Professional Web Package", wsMin: 5250, wsMax: 6500, rtMin: 9000, rtMax: 15000, maintHrs: 3.5, desc: "Homepage + 5 pages + chat + voice + integrations" },
-      { name: "Full AI Web Presence", wsMin: 7500, wsMax: 8500, rtMin: 12000, rtMax: 20000, maintHrs: 4.5, desc: "Homepage + 8 pages + chat + voice + analytics — the complete web build" },
+      { name: "AI Website + Chat + Integrations", wsMin: 1750, wsMax: 2000, rtMin: 4000, rtMax: 7500, maintHrs: 2.5, desc: "Convert more visitors — AI homepage with live chatbot, forms, and integrations" },
+      { name: "Additional Page", wsMin: 750, wsMax: 850, rtMin: 1000, rtMax: 1500, maintHrs: 1.5, desc: "Per-page add-on — custom layout, copy, responsive design" },
+      { name: "Landing Page + Thank-You", wsMin: 750, wsMax: 750, rtMin: 1500, rtMax: 3000, maintHrs: 1.5, desc: "Single campaign funnel page with confirmation page" },
+      { name: "Multi-Page Funnel (3-4 pages)", wsMin: 1150, wsMax: 1150, rtMin: 2500, rtMax: 5000, maintHrs: 1.5, desc: "Full funnel — multiple landing pages with thank-you flows" },
+      { name: "Starter Web Package", wsMin: 3750, wsMax: 4500, rtMin: 6500, rtMax: 10000, maintHrs: 2.5, desc: "Homepage + 3 pages + AI chat + integrations — everything to launch" },
+      { name: "Professional Web Package", wsMin: 5250, wsMax: 6500, rtMin: 9000, rtMax: 15000, maintHrs: 3.5, desc: "Homepage + 5 pages + chat + voice + integrations — full digital presence" },
+      { name: "Complete AI Web Presence", wsMin: 7500, wsMax: 8500, rtMin: 12000, rtMax: 20000, maintHrs: 4.5, desc: "Homepage + 8 pages + chat + voice + analytics — the whole package" },
     ]},
     { cat: "ScaleLogix AI Premium Agents", type: "flat", items: [
-      { name: "Premium Agent — 1 Agent Deployment", contactUs: true, maintHrs: 0, desc: "Flat-fee licensed premium voice agent. No retainer. Contact us for deployment pricing." },
-      { name: "Premium Agent — Multi-Agent (2-5 agents)", contactUs: true, maintHrs: 0, desc: "Flat-fee licensed premium voice agents, scales with deployment. Contact us to scope." },
-      { name: "Premium Agent — Enterprise (5+ agents)", contactUs: true, maintHrs: 0, desc: "Enterprise flat-fee premium voice agents. Contact us for volume pricing." },
+      { name: "Premium Agent — Single Deployment", contactUs: true, maintHrs: 0, desc: "Flat-fee AI voice agent. No monthly retainer. Handles calls, books appointments, qualifies leads." },
+      { name: "Premium Agent — Multi-Agent (2-5)", contactUs: true, maintHrs: 0, desc: "Multiple flat-fee voice agents — cover more lines, departments, or locations." },
+      { name: "Premium Agent — Enterprise (5+)", contactUs: true, maintHrs: 0, desc: "Full enterprise voice deployment at flat-fee volume pricing." },
     ]},
     { cat: "ScaleLogix AI Custom Agents", type: "both", items: [
-      { name: "1 Custom AI Agent + CRM + Setup", wsMin: 3000, wsMax: 3000, rtMin: 5000, rtMax: 12000, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 2500, maintHrs: 3.5, desc: "Custom-built AI voice agent with full CRM integration. Includes monthly retainer." },
-      { name: "Texting/SMS Add-On (per agent)", wsMin: 500, wsMax: 500, rtMin: 750, rtMax: 2000, maintHrs: 1.5, desc: "SMS follow-up and outreach sequences per custom agent" },
-      { name: "Additional Custom Agent (agents 2-3)", wsMin: 1000, wsMax: 1000, rtMin: 1500, rtMax: 3500, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 2500, maintHrs: 2.5, desc: "Additional custom agent deployment with monthly retainer" },
-      { name: "Additional Custom Agent (volume, 4+)", wsMin: 750, wsMax: 750, rtMin: 1500, rtMax: 3500, moWsMin: 400, moWsMax: 400, moRtMin: 800, moRtMax: 2500, maintHrs: 2.5, desc: "Volume-priced custom agent at 4+ deployments with monthly retainer" },
-      { name: "Custom Agents — Starter (1 agent + CRM + texting)", wsMin: 3500, wsMax: 3500, rtMin: 5000, rtMax: 7500, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 1200, maintHrs: 3.5, desc: "Complete starter custom voice system with retainer" },
-      { name: "Custom Agents — Growth (2 agents + CRM + texting)", wsMin: 5000, wsMax: 5000, rtMin: 8500, rtMax: 12000, moWsMin: 1000, moWsMax: 1000, moRtMin: 1500, moRtMax: 2000, maintHrs: 4.5, desc: "Multi-agent custom system with retainer" },
-      { name: "Custom Agents — Enterprise (5 agents + full CRM)", wsMin: 8250, wsMax: 8250, rtMin: 12000, rtMax: 20000, moWsMin: 2500, moWsMax: 2500, moRtMin: 2500, moRtMax: 4000, maintHrs: 4.5, desc: "Full enterprise custom voice deployment with retainer" },
+      { name: "Custom Agent Build + CRM Setup", wsMin: 3000, wsMax: 3000, rtMin: 5000, rtMax: 12000, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 2500, maintHrs: 3.5, desc: "Fully custom AI voice agent tailored to your business. Includes ongoing monthly retainer." },
+      { name: "Texting/SMS Add-On (per agent)", wsMin: 500, wsMax: 500, rtMin: 750, rtMax: 2000, maintHrs: 1.5, desc: "Add automated SMS follow-up to any custom agent" },
+      { name: "Additional Custom Agent (2-3)", wsMin: 1000, wsMax: 1000, rtMin: 1500, rtMax: 3500, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 2500, maintHrs: 2.5, desc: "Add another custom agent with its own monthly retainer" },
+      { name: "Additional Custom Agent (volume, 4+)", wsMin: 750, wsMax: 750, rtMin: 1500, rtMax: 3500, moWsMin: 400, moWsMax: 400, moRtMin: 800, moRtMax: 2500, maintHrs: 2.5, desc: "Volume-priced agents when deploying 4+ with retainer" },
+      { name: "Custom Starter Package (1 agent + CRM + texting)", wsMin: 3500, wsMax: 3500, rtMin: 5000, rtMax: 7500, moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 1200, maintHrs: 3.5, desc: "Ready-to-deploy custom voice system with monthly support" },
+      { name: "Custom Growth Package (2 agents + CRM + texting)", wsMin: 5000, wsMax: 5000, rtMin: 8500, rtMax: 12000, moWsMin: 1000, moWsMax: 1000, moRtMin: 1500, moRtMax: 2000, maintHrs: 4.5, desc: "Multi-agent custom system for growing teams" },
+      { name: "Custom Enterprise Package (5 agents + full CRM)", wsMin: 8250, wsMax: 8250, rtMin: 12000, rtMax: 20000, moWsMin: 2500, moWsMax: 2500, moRtMin: 2500, moRtMax: 4000, maintHrs: 4.5, desc: "Full enterprise custom voice deployment with dedicated support" },
     ]},
-    { cat: "AI Automation", type: "setup", items: [
-      { name: "AI-Driven CRM Configuration + Pipelines", wsMin: 1500, wsMax: 2500, rtMin: 5000, rtMax: 12000, maintHrs: 3.5, desc: "Full CRM buildout with AI-powered pipelines and automation rules" },
-      { name: "Advanced Automation Package", wsMin: 2000, wsMax: 3500, rtMin: 5000, rtMax: 15000, maintHrs: 4.5, desc: "Multi-branch triggers, segmentation, and complex workflow automation" },
-      { name: "Integration Build (per system)", wsMin: 500, wsMax: 750, rtMin: 1500, rtMax: 3000, maintHrs: 2.5, desc: "API/webhook integration connecting external systems to the CRM" },
-      { name: "AI Analytics & Reporting Dashboard", wsMin: 1500, wsMax: 2500, rtMin: 4000, rtMax: 8000, maintHrs: 2.5, desc: "Custom analytics dashboard with AI-powered insights and reporting" },
-      { name: "Full AI Infrastructure Build", contactUs: true, rtFrom: 15000, maintHrs: 4.5, desc: "CRM + voice + website + automations — the complete AI stack. Scope varies — contact us." },
+    { cat: "Speed to Lead & Follow-Up", type: "setup", items: [
+      { name: "Missed-Call Text-Back", contactUs: true, maintHrs: 1.5, desc: "Stop losing leads — auto-text and email anyone who calls when you can't answer" },
+      { name: "AI Call Handler", contactUs: true, maintHrs: 2.5, desc: "AI answers inbound calls 24/7, qualifies leads, and books appointments — like a virtual employee" },
+      { name: "After-Hours Call Coverage", contactUs: true, maintHrs: 2.5, desc: "Never miss an after-hours lead — AI handles calls outside business hours" },
+      { name: "Speed-to-Lead System", contactUs: true, maintHrs: 2.5, desc: "Respond to new leads in seconds, not hours — automated multi-channel instant follow-up" },
+      { name: "Lead Qualification & Scoring", contactUs: true, maintHrs: 2.5, desc: "Automatically score and qualify leads so your sales team only talks to the best ones" },
+      { name: "Lead Routing", contactUs: true, maintHrs: 1.5, desc: "Route qualified leads to the right rep based on rules, territory, or availability" },
+      { name: "Quote / Estimate Follow-Up", contactUs: true, maintHrs: 1.5, desc: "Recover stale deals — automated follow-up on every quote and estimate until they close or say no" },
+      { name: "Lead Nurturing Sequences", contactUs: true, maintHrs: 2.5, desc: "Keep cold leads warm with multi-step email/SMS nurture until they're ready to buy" },
+      { name: "Appointment Booking + Reminders", contactUs: true, maintHrs: 2.5, desc: "Automated booking with calendar sync, confirmations, and no-show-reducing reminders" },
+    ]},
+    { cat: "AI Automation & CRM", type: "setup", items: [
+      { name: "CRM Setup + AI Pipelines", wsMin: 1500, wsMax: 2500, rtMin: 5000, rtMax: 12000, maintHrs: 3.5, desc: "Turn your CRM into a revenue machine — AI-powered pipelines, automations, and deal tracking" },
+      { name: "Advanced Automation Package", wsMin: 2000, wsMax: 3500, rtMin: 5000, rtMax: 15000, maintHrs: 4.5, desc: "Complex workflow automation — multi-branch triggers, segmentation, and AI decision-making" },
+      { name: "System Integration (per connection)", wsMin: 500, wsMax: 750, rtMin: 1500, rtMax: 3000, maintHrs: 2.5, desc: "Connect your tools — API/webhook integrations between your CRM and external systems" },
+      { name: "AI Analytics Dashboard", wsMin: 1500, wsMax: 2500, rtMin: 4000, rtMax: 8000, maintHrs: 2.5, desc: "See what's working — custom dashboard with AI-powered insights and reporting" },
+      { name: "Full AI Infrastructure Build", contactDevTeam: true, rtFrom: 15000, maintHrs: 4.5, desc: "The complete stack — CRM + agents + website + automations. Every build is different — contact dev team to scope." },
     ]},
     { cat: "Lead Generation & Data", type: "both", items: [
-      { name: "AI Outreach System", contactUs: true, rtFrom: 8000, maintHrs: 3.5, desc: "Cold email sequences, appointment setting, and AI-powered outreach. Scope varies — contact us." },
-      { name: "AI Lead Gen & Distribution System", contactUs: true, rtFrom: 10000, maintHrs: 4.5, desc: "Full lead generation and distribution automation. Scope varies — contact us." },
-      { name: "Apex Data Setup", wsMin: 750, wsMax: 1000, rtMin: 2000, rtMax: 5000, maintHrs: 1.5, desc: "One-time SaaS setup and configuration" },
-      { name: "Apex Data — Starter (1,000 records/mo)", moWsMin: 197, moWsMax: 197, moRtMin: 500, moRtMax: 800, maintHrs: 1.5, desc: "Entry-level data enrichment" },
-      { name: "Apex Data — Growth (2,500 records/mo)", moWsMin: 397, moWsMax: 397, moRtMin: 800, moRtMax: 1500, maintHrs: 1.5, desc: "Growing businesses data enrichment" },
-      { name: "Apex Data — Professional (5,000 records/mo)", moWsMin: 597, moWsMax: 597, moRtMin: 1200, moRtMax: 2000, maintHrs: 2.5, desc: "Professional-grade data enrichment" },
-      { name: "Apex Data — Scale+ (10K+ records/mo)", contactUs: true, moRtFrom: 1800, maintHrs: 2.5, desc: "Scale / Enterprise / Unlimited data enrichment. Contact us for volume pricing." },
+      { name: "AI Outreach System", wsMin: 2500, wsMax: 4000, rtMin: 8000, rtMax: 20000, maintHrs: 3.5, desc: "Fill your pipeline — cold email, sequences, appointment setting, all AI-powered" },
+      { name: "AI Lead Gen & Distribution", contactDevTeam: true, rtFrom: 10000, maintHrs: 4.5, desc: "Full lead generation and distribution system. Every setup is unique — contact dev team to scope." },
+      { name: "Apex Data Setup", wsMin: 750, wsMax: 1000, rtMin: 2000, rtMax: 5000, maintHrs: 1.5, desc: "One-time setup for AI-enriched audience data platform" },
+      { name: "Apex Data — Starter (1K records/mo)", moWsMin: 197, moWsMax: 197, moRtMin: 500, moRtMax: 800, maintHrs: 1.5, desc: "Entry-level AI data enrichment for smaller lists" },
+      { name: "Apex Data — Growth (2.5K records/mo)", moWsMin: 397, moWsMax: 397, moRtMin: 800, moRtMax: 1500, maintHrs: 1.5, desc: "Growing businesses — more records, deeper enrichment" },
+      { name: "Apex Data — Professional (5K records/mo)", moWsMin: 597, moWsMax: 597, moRtMin: 1200, moRtMax: 2000, maintHrs: 2.5, desc: "Professional-grade data enrichment at scale" },
+      { name: "Apex Data — Scale+ (10K+ records/mo)", contactUs: true, moRtFrom: 1800, maintHrs: 2.5, desc: "High-volume data enrichment — contact us for volume pricing" },
     ]},
     { cat: "Marketing & Outreach", type: "monthly", items: [
-      { name: "Ad Management Setup", wsMin: 500, wsMax: 500, rtMin: 1000, rtMax: 2500, maintHrs: 1.5, desc: "One-time ad account setup and configuration" },
-      { name: "Ad Management — T1 (up to $6k/mo spend)", moWsMin: 950, moWsMax: 950, moRtMin: 1500, moRtMax: 3000, maintHrs: 3.5, desc: "Monthly ad management for smaller budgets" },
-      { name: "Ad Management — T2 ($6k-$11k/mo spend)", moWsMin: 1250, moWsMax: 1250, moRtMin: 2000, moRtMax: 5000, maintHrs: 3.5, desc: "Mid-tier ad management with optimization" },
-      { name: "Ad Management — T3 ($11k-$30k/mo spend)", moWsMin: 1500, moWsMax: 1500, moRtMin: 2500, moRtMax: 7500, maintHrs: 4.5, desc: "High-spend ad management with full optimization" },
-      { name: "Social Media — 10 Static Posts/mo", moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 1500, maintHrs: 2.5, desc: "Monthly social media content — static posts only" },
-      { name: "Social Media — 6 Static + 4 Video/mo", moWsMin: 700, moWsMax: 700, moRtMin: 1200, moRtMax: 2000, maintHrs: 3.5, desc: "Mixed content with video production" },
-      { name: "Social Media — 16 Static + 4 Video/mo", moWsMin: 1000, moWsMax: 1000, moRtMin: 1500, moRtMax: 2500, maintHrs: 3.5, desc: "High-volume mixed content" },
-      { name: "Social Media — 12 Static + 8 Video/mo", moWsMin: 1150, moWsMax: 1150, moRtMin: 1800, moRtMax: 3000, maintHrs: 4.5, desc: "Premium content package with heavy video" },
-      { name: "LinkedIn Outreach Setup", wsMin: 500, wsMax: 500, rtMin: 1000, rtMax: 2500, maintHrs: 1.5, desc: "One-time outreach system setup and configuration" },
-      { name: "LinkedIn Outreach — Dedicated Profile", moWsMin: 750, moWsMax: 750, moRtMin: 1200, moRtMax: 2500, maintHrs: 2.5, desc: "Ongoing outreach management on a dedicated profile" },
+      { name: "Ad Management Setup", wsMin: 500, wsMax: 500, rtMin: 1000, rtMax: 2500, maintHrs: 1.5, desc: "Get your ad accounts set up right — one-time configuration" },
+      { name: "Ad Management — Tier 1 (up to $6k/mo spend)", moWsMin: 950, moWsMax: 950, moRtMin: 1500, moRtMax: 3000, maintHrs: 3.5, desc: "Monthly ad management and optimization for smaller budgets" },
+      { name: "Ad Management — Tier 2 ($6k-$11k/mo spend)", moWsMin: 1250, moWsMax: 1250, moRtMin: 2000, moRtMax: 5000, maintHrs: 3.5, desc: "Mid-tier ad management with advanced optimization" },
+      { name: "Ad Management — Tier 3 ($11k-$30k/mo spend)", moWsMin: 1500, moWsMax: 1500, moRtMin: 2500, moRtMax: 7500, maintHrs: 4.5, desc: "High-spend ad management with full optimization and strategy" },
+      { name: "Social Media — Starter (10 posts/mo)", moWsMin: 500, moWsMax: 500, moRtMin: 800, moRtMax: 1500, maintHrs: 2.5, desc: "Stay visible — 10 static posts per month on FB + IG" },
+      { name: "Social Media — Growth (6 static + 4 video/mo)", moWsMin: 700, moWsMax: 700, moRtMin: 1200, moRtMax: 2000, maintHrs: 3.5, desc: "Level up — mixed content with professional video production" },
+      { name: "Social Media — Pro (16 static + 4 video/mo)", moWsMin: 1000, moWsMax: 1000, moRtMin: 1500, moRtMax: 2500, maintHrs: 3.5, desc: "High-volume content to dominate your feeds" },
+      { name: "Social Media — Premium (12 static + 8 video/mo)", moWsMin: 1150, moWsMax: 1150, moRtMin: 1800, moRtMax: 3000, maintHrs: 4.5, desc: "Maximum impact — premium content package with heavy video" },
+      { name: "LinkedIn Outreach Setup", wsMin: 500, wsMax: 500, rtMin: 1000, rtMax: 2500, maintHrs: 1.5, desc: "Set up your outreach machine — one-time LinkedIn configuration" },
+      { name: "LinkedIn Outreach — Managed Profile", moWsMin: 750, moWsMax: 750, moRtMin: 1200, moRtMax: 2500, maintHrs: 2.5, desc: "Ongoing LinkedIn outreach on a dedicated profile — we run it, you close deals" },
     ]},
-    { cat: "AI Call & Appointment Systems", type: "setup", items: [
-      { name: "Missed-Call Text-Back (AI Text + Email)", contactUs: true, maintHrs: 1.5, desc: "Automatically text and email callers when calls are missed. Recaptures lost leads instantly." },
-      { name: "AI Call Handler / AI Employee", contactUs: true, maintHrs: 2.5, desc: "AI-powered employee that handles inbound calls, qualifies leads, and books appointments." },
-      { name: "After-Hours AI Voice Handling", contactUs: true, maintHrs: 2.5, desc: "AI voice agent covers calls outside business hours — never miss a lead." },
-      { name: "Lead Qualification System", contactUs: true, maintHrs: 2.5, desc: "Automated qualification flow that scores and filters inbound leads before they hit the sales team." },
-      { name: "Lead Scoring", contactUs: true, maintHrs: 1.5, desc: "Score leads by intent and fit so reps focus on the best opportunities." },
-      { name: "Lead Routing to Salespeople", contactUs: true, maintHrs: 1.5, desc: "Route qualified leads to the right rep based on rules, territory, or availability." },
-      { name: "Appointment Booking System", contactUs: true, maintHrs: 2.5, desc: "Automated appointment booking with calendar sync and confirmation messages." },
-      { name: "Reminder Sequences", contactUs: true, maintHrs: 1.5, desc: "SMS / email reminder sequences to reduce no-shows and confirm appointments." },
+    { cat: "Reactivation & Revenue Recovery", type: "setup", items: [
+      { name: "Past Customer Reactivation", contactUs: true, maintHrs: 2.5, desc: "Turn your existing database into revenue — win back customers who've gone quiet" },
+      { name: "Dead Lead Reactivation", contactUs: true, maintHrs: 2.5, desc: "Monetize your dead leads — reignite dormant contacts with automated outreach" },
+      { name: "Lapsed Policy Win-Back", contactUs: true, maintHrs: 2.5, desc: "Insurance-specific — win back lapsed policyholders with renewal campaigns" },
+      { name: "Patient Reactivation", contactUs: true, maintHrs: 2.5, desc: "Healthcare-specific — bring inactive patients back with booking and reminder campaigns" },
+      { name: "Sphere / Database Reactivation", contactUs: true, maintHrs: 2.5, desc: "Real estate / services — re-engage your sphere of influence and past client database" },
     ]},
-    { cat: "Campaign & Retention Systems", type: "setup", items: [
-      { name: "Quote / Estimate Follow-Up", contactUs: true, maintHrs: 1.5, desc: "Automated follow-up on quotes and estimates to recover stale deals and close more business." },
-      { name: "Lead Nurturing Sequences", contactUs: true, maintHrs: 2.5, desc: "Multi-step nurture sequences to keep cold leads warm until they're ready to buy." },
-      { name: "Past Customer Reactivation", contactUs: true, maintHrs: 2.5, desc: "Win back previous customers with a targeted reactivation campaign." },
-      { name: "Dead Lead Reactivation", contactUs: true, maintHrs: 2.5, desc: "Reignite dormant leads in your CRM with automated outreach." },
-      { name: "Lapsed Policy Win-Back (Insurance)", contactUs: true, maintHrs: 2.5, desc: "Win back lapsed policyholders with renewal and re-engagement campaigns." },
-      { name: "Patient Reactivation (Healthcare)", contactUs: true, maintHrs: 2.5, desc: "Reactivate inactive patients with booking and reminder campaigns." },
-      { name: "Sphere / Database Reactivation (Real Estate)", contactUs: true, maintHrs: 2.5, desc: "Re-engage your sphere of influence and past client database." },
-      { name: "Renewal Campaigns (Insurance)", contactUs: true, maintHrs: 2.5, desc: "Automated renewal campaigns to retain policyholders at renewal time." },
-      { name: "Client Check-In Automation", contactUs: true, maintHrs: 1.5, desc: "Scheduled automated check-ins to maintain client relationships and uncover new opportunities." },
-      { name: "Cross-Sell Campaigns", contactUs: true, maintHrs: 2.5, desc: "Identify and trigger cross-sell opportunities to existing customers." },
-      { name: "Treatment / Service Recommendation Campaigns", contactUs: true, maintHrs: 2.5, desc: "Recommend next-best services to existing customers based on their history." },
-      { name: "Post-Service Referral Campaigns", contactUs: true, maintHrs: 1.5, desc: "Trigger referral requests at the right moment after service completion." },
+    { cat: "Retention & Growth", type: "setup", items: [
+      { name: "Renewal Campaign Automation", contactUs: true, maintHrs: 2.5, desc: "Keep customers from churning — automated renewal campaigns at the right time" },
+      { name: "Client Check-In Automation", contactUs: true, maintHrs: 1.5, desc: "Maintain relationships at scale — scheduled automated check-ins that feel personal" },
+      { name: "Cross-Sell / Upsell Campaigns", contactUs: true, maintHrs: 2.5, desc: "Grow revenue per customer — trigger cross-sell and upsell offers based on their history" },
+      { name: "Referral Generation System", contactUs: true, maintHrs: 1.5, desc: "Turn happy customers into referral machines — automated ask at the perfect moment" },
     ]},
   ];
   INSURANCE_CORE = [];
@@ -730,10 +730,11 @@ function debouncedSaveConfig(){
 }
 
 // ========== PRICING HELPERS ==========
-function getWholesale(item){ return item.contactUs ? 0 : (item.wsMin || 0) }
-function getRetail(item){ return item.contactUs ? 0 : (item.rtMin || 0) }
-function getMonthlyWs(item){ return item.contactUs ? 0 : (item.moWsMin || 0) }
-function getMonthlyRt(item){ return item.contactUs ? 0 : (item.moRtMin || 0) }
+function isContactItem(item){ return item.contactUs || item.contactDevTeam }
+function getWholesale(item){ return isContactItem(item) ? 0 : (item.wsMin || 0) }
+function getRetail(item){ return isContactItem(item) ? 0 : (item.rtMin || 0) }
+function getMonthlyWs(item){ return isContactItem(item) ? 0 : (item.moWsMin || 0) }
+function getMonthlyRt(item){ return isContactItem(item) ? 0 : (item.moRtMin || 0) }
 function getMaintHrs(item){ return item.maintHrs || 0 }
 function getMaintCost(item){ return getMaintHrs(item) * CFG.devRate }
 function marginPct(retail, wholesale){ return wholesale === 0 ? 0 : ((retail - wholesale) / retail * 100) }
@@ -746,30 +747,32 @@ function getServiceType(item){
   return 'setup';
 }
 
+function contactLabel(item){ return item.contactDevTeam ? 'Contact Dev Team' : 'Contact Us' }
+
 function fmtWsRange(item){
-  if(item.contactUs) return 'Contact Us';
+  if(isContactItem(item)) return contactLabel(item);
   const v = getWholesale(item);
   return v > 0 ? fmt(v) : '—';
 }
 
 function fmtRtRange(item){
-  if(item.contactUs){
+  if(isContactItem(item)){
     if(item.rtFrom) return 'From ' + fmt(item.rtFrom);
     if(item.moRtFrom) return 'From ' + fmt(item.moRtFrom) + '/mo';
-    return 'Contact Us';
+    return contactLabel(item);
   }
   const v = getRetail(item);
   return v > 0 ? fmt(v) : '—';
 }
 
 function fmtMoWsRange(item){
-  if(item.contactUs) return '';
+  if(isContactItem(item)) return '';
   const v = getMonthlyWs(item);
   return v > 0 ? fmt(v) + '/mo' : '—';
 }
 
 function fmtMoRtRange(item){
-  if(item.contactUs){
+  if(isContactItem(item)){
     if(item.moRtFrom) return 'From ' + fmt(item.moRtFrom) + '/mo';
     return '';
   }
@@ -932,7 +935,7 @@ function renderTab1(){
       <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:600;margin-bottom:6px">${cat.cat}</div>
       <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px">${item.name}</div>
       <div style="font-size:.8rem;color:var(--text-dim);line-height:1.6">${item.desc || ''}</div>
-      <div style="display:inline-block;margin-top:8px;padding:3px 10px;border-radius:12px;font-size:.63rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple)">${item.contactUs ? 'Contact Us' : (svcType === 'both' ? 'Setup + Monthly' : svcType === 'monthly' ? 'Monthly' : 'Setup')}</div>
+      <div style="display:inline-block;margin-top:8px;padding:3px 10px;border-radius:12px;font-size:.63rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;background:rgba(121,102,162,.1);color:var(--purple)">${isContactItem(item) ? contactLabel(item) : (svcType === 'both' ? 'Setup + Monthly' : svcType === 'monthly' ? 'Monthly' : 'Setup')}</div>
     </div>`;
 
   if(ws > 0 || rt > 0){
@@ -1159,9 +1162,8 @@ function buildTab3(){
       <div class="pkg-subtitle">${pkg.subtitle || ''}</div>
       <div class="pkg-prices">
         ${pkg.hours > 0 ? `
-        <div class="price-row"><span class="plabel">${pkg.hours} dev hours / mo</span><span class="pval gold">${fmt(price)}/mo</span></div>
-        <div class="price-row sales-only"><span class="plabel" style="font-size:.65rem;color:var(--text-dim)">${pkg.hours} hrs × ${fmt(CFG.devRate)}/hr</span><span class="pval" style="font-size:.7rem;color:var(--text-dim)"></span></div>
-        ${pkg.discount > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">${Math.round(pkg.discount * 100)}% discount applied</span><span class="pval" style="font-size:.7rem;color:var(--text-dim);text-decoration:line-through">${fmt(Math.round(pkg.hours * CFG.devRate))}</span></div>` : ''}
+        <div class="price-row"><span class="plabel">${pkg.hours} dev hours included</span><span class="pval gold">${fmt(price)}/mo</span></div>
+        ${pkg.discount > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">Save ${Math.round(pkg.discount * 100)}% vs hourly</span></div>` : ''}
         ` : `
         <div class="price-row"><span class="plabel">Hours</span><span class="pval">Custom scope</span></div>
         <div class="price-row"><span class="plabel">Pricing</span><span class="pval" style="color:var(--accent-dark)">Contact us</span></div>
@@ -1212,7 +1214,7 @@ const OFFER_TIERS = {
     services: [
       { cat: 'Website & Funnel', items: [4] },
       { cat: 'ScaleLogix AI Premium Agents', items: [1] },
-      { cat: 'AI Automation', items: [0] },
+      { cat: 'AI Automation & CRM', items: [0] },
     ],
     discount: 0.075,
     suggestedPkg: 'Plus',
@@ -1226,7 +1228,7 @@ const OFFER_TIERS = {
     services: [
       { cat: 'Website & Funnel', items: [5] },
       { cat: 'ScaleLogix AI Custom Agents', items: [6] },
-      { cat: 'AI Automation', items: [0, 1, 3] },
+      { cat: 'AI Automation & CRM', items: [0, 1, 3] },
       { cat: 'Marketing & Outreach', items: [0, 1] },
     ],
     discount: 0.10,
@@ -1262,7 +1264,7 @@ function getOfferTierPreview(tierKey){
     wsSetup += getWholesale(e.item);
     rtSum += getRetail(e.item);
     maintHrs += getMaintHrs(e.item);
-    if(e.item.contactUs) hasContactUs = true;
+    if(isContactItem(e.item)) hasContactUs = true;
   });
   const n = items.length;
   const ds = tier ? (tier.discount || 0) : 0;
@@ -1349,12 +1351,13 @@ function buildTab4(){
     const ws = getWholesale(e.item);
     const rt = getRetail(e.item);
     const mh = getMaintHrs(e.item);
-    const rtDisplay = e.item.contactUs ? (e.item.rtFrom ? 'From ' + fmt(e.item.rtFrom) : 'Contact Us') : (rt > 0 ? fmt(rt) : '—');
+    const isCu = isContactItem(e.item);
+    const rtDisplay = isCu ? (e.item.rtFrom ? 'From ' + fmt(e.item.rtFrom) : contactLabel(e.item)) : (rt > 0 ? fmt(rt) : '—');
     itemsHtml += `
     <div class="ins-item">
       <span class="iname">${e.item.name}</span>
-      <span class="ihours sales-only" style="white-space:nowrap">${e.item.contactUs ? '—' : (ws > 0 ? fmt(ws) : '—')}</span>
-      <span style="white-space:nowrap;font-size:.72rem;color:${e.item.contactUs ? 'var(--accent-dark)' : 'var(--purple)'};font-weight:600">${rtDisplay}</span>
+      <span class="ihours sales-only" style="white-space:nowrap">${isCu ? '—' : (ws > 0 ? fmt(ws) : '—')}</span>
+      <span style="white-space:nowrap;font-size:.72rem;color:${isCu ? 'var(--accent-dark)' : 'var(--purple)'};font-weight:600">${rtDisplay}</span>
       <span style="white-space:nowrap;font-size:.68rem;color:var(--text-dim)">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo' : ''}</span>
     </div>`;
   });
