@@ -874,8 +874,8 @@ function showT1Services(ci){
     ${cat.items.map((item, ii) => {
       const isActive = t1SelectedService === ii;
       const svcType = getServiceType(item);
-      const priceLabel = item.wsMin ? fmt(item.wsMin) + (item.wsMax > item.wsMin ? ' - ' + fmt(item.wsMax) : '') : '';
-      const moLabel = item.moWsMin ? fmt(item.moWsMin) + '/mo' : '';
+      const priceLabel = isContactItem(item) ? contactLabel(item) : (item.rtMin ? fmt(item.rtMin) + (item.rtMax > item.rtMin ? ' – ' + fmt(item.rtMax) : '') : '');
+      const moLabel = isContactItem(item) ? '' : (item.moRtMin ? fmt(item.moRtMin) + (item.moRtMax > item.moRtMin ? ' – ' + fmt(item.moRtMax) : '') + '/mo' : '');
       const priceText = [priceLabel, moLabel].filter(Boolean).join(' + ');
       return `
       <div class="t1-svc-card${isActive?' active':''}" onclick="selectT1Service(${ci},${ii})">
