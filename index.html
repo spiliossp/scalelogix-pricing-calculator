@@ -1205,7 +1205,7 @@ const OFFER_TIERS = {
       { cat: 'Website & Funnel', items: [0] },
       { cat: 'ScaleLogix AI Premium Agents', items: [0] },
     ],
-    discount: 0.05,
+    fixedPrice: 9000,
     suggestedPkg: 'Core',
     suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams',
@@ -1219,7 +1219,7 @@ const OFFER_TIERS = {
       { cat: 'ScaleLogix AI Premium Agents', items: [1] },
       { cat: 'AI Automation & CRM', items: [0] },
     ],
-    discount: 0.075,
+    fixedPrice: 18500,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1234,7 +1234,7 @@ const OFFER_TIERS = {
       { cat: 'AI Automation & CRM', items: [0, 1, 3] },
       { cat: 'Marketing & Outreach', items: [0, 1] },
     ],
-    discount: 0.10,
+    fixedPrice: 32500,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1270,11 +1270,11 @@ function getOfferTierPreview(tierKey){
     if(isContactItem(e.item)) hasContactUs = true;
   });
   const n = items.length;
-  const ds = tier ? (tier.discount || 0) : 0;
-  const dsSavingsSetup = Math.round(rtSum * ds);
-  const finalRtSetup = rtSum - dsSavingsSetup;
+  const finalRtSetup = tier && tier.fixedPrice ? tier.fixedPrice : rtSum;
+  const dsSavingsSetup = rtSum > finalRtSetup ? rtSum - finalRtSetup : 0;
+  const dsPct = rtSum > 0 && dsSavingsSetup > 0 ? dsSavingsSetup / rtSum : 0;
   const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
-  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSum, maintHrs, dsSavingsSetup, mgn, ds, hasContactUs };
+  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSum, maintHrs, dsSavingsSetup, mgn, ds: dsPct, hasContactUs };
 }
 
 function buildTab4(){
