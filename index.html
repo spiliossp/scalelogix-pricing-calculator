@@ -1205,7 +1205,7 @@ const OFFER_TIERS = {
       { cat: 'Website & Funnel', items: [0] },
       { cat: 'ScaleLogix AI Premium Agents', items: [0] },
     ],
-    fixedPrice: 9000,
+    discount: 0.05,
     suggestedPkg: 'Core',
     suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams',
@@ -1219,7 +1219,7 @@ const OFFER_TIERS = {
       { cat: 'ScaleLogix AI Premium Agents', items: [1] },
       { cat: 'AI Automation & CRM', items: [0] },
     ],
-    fixedPrice: 18500,
+    discount: 0.075,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1234,7 +1234,7 @@ const OFFER_TIERS = {
       { cat: 'AI Automation & CRM', items: [0, 1, 3] },
       { cat: 'Marketing & Outreach', items: [0, 1] },
     ],
-    fixedPrice: 32500,
+    discount: 0.10,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1270,11 +1270,12 @@ function getOfferTierPreview(tierKey){
     if(isContactItem(e.item)) hasContactUs = true;
   });
   const n = items.length;
-  const finalRtSetup = tier && tier.fixedPrice ? tier.fixedPrice : rtSum;
-  const dsSavingsSetup = rtSum > finalRtSetup ? rtSum - finalRtSetup : 0;
-  const dsPct = rtSum > 0 && dsSavingsSetup > 0 ? dsSavingsSetup / rtSum : 0;
+  const ds = tier ? (tier.discount || 0) : 0;
+  const finalRtSetup = rtSum;
+  const rtBeforeDiscount = ds > 0 ? Math.round(rtSum / (1 - ds)) : rtSum;
+  const dsSavingsSetup = rtBeforeDiscount - finalRtSetup;
   const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
-  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount: rtSum, maintHrs, dsSavingsSetup, mgn, ds: dsPct, hasContactUs };
+  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount, maintHrs, dsSavingsSetup, mgn, ds, hasContactUs };
 }
 
 function buildTab4(){
@@ -1306,8 +1307,9 @@ function buildTab4(){
       <div class="pkg-discount">${preview.n} services included</div>
       <div class="pkg-prices">
         <div class="price-row sales-only"><span class="plabel">Wholesale</span><span class="pval" id="offer-ws-${tierKey}">${fmt(preview.wsSetup)}</span></div>
+        ${preview.ds > 0 ? `<div class="price-row"><span class="plabel">List Price</span><span class="pval" style="font-size:.8rem;color:var(--text-dim);text-decoration:line-through">${fmt(preview.rtBeforeDiscount)}</span></div>` : ''}
         <div class="price-row"><span class="plabel">Total Price</span><span class="pval gold" id="offer-rt-${tierKey}">${fmt(preview.rtSetup)}${preview.hasContactUs ? '+' : ''}</span></div>
-        ${preview.ds > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">${tier.name} Discount (${(preview.ds*100).toFixed(preview.ds*100 % 1 === 0 ? 0 : 1)}%)</span><span class="pval" style="color:var(--green);font-size:.8rem">-${fmt(preview.dsSavingsSetup)}</span></div>` : ''}
+        ${preview.ds > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">${(preview.ds*100).toFixed(preview.ds*100 % 1 === 0 ? 0 : 1)}% bundle discount</span><span class="pval" style="color:var(--green);font-size:.8rem">Save ${fmt(preview.dsSavingsSetup)}</span></div>` : ''}
         ${preview.hasContactUs ? `<div class="price-row"><span class="plabel" style="font-size:.65rem;color:var(--text-dim)">Includes custom-scope items</span><span class="pval" style="font-size:.65rem;color:var(--accent-dark)">+ Contact Us</span></div>` : ''}
         <div class="price-row"><span class="plabel">Est. Maintenance</span><span class="pval">${preview.maintHrs} hrs/mo</span></div>
         <div class="price-row sales-only"><span class="plabel">Margin</span><span class="pval green">${preview.mgn.toFixed(1)}%</span></div>
