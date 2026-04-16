@@ -387,7 +387,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.5}
               <th>Service</th>
               <th>Monthly</th>
               <th class="sales-only">Min. Price</th>
-              <th>Retail</th>
+              <th>Total Price</th>
             </tr>
           </thead>
           <tbody id="t2-body"></tbody>
@@ -909,7 +909,7 @@ function renderTab1(){
   if(t1SelectedCat === null || t1SelectedService === null){
     summaryEl.innerHTML = `
       <div class="summary-item"><div class="label">Service</div><div class="value">—</div></div>
-      <div class="summary-item"><div class="label">Setup Price</div><div class="value gold">—</div></div>
+      <div class="summary-item"><div class="label">Total Price</div><div class="value gold">—</div></div>
       <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">—</div></div>
     `;
     detailEl.innerHTML = '';
@@ -932,7 +932,7 @@ function renderTab1(){
   summaryEl.innerHTML = `
     <div class="summary-item"><div class="label">Service</div><div class="value">${item.name.length > 25 ? item.name.substring(0,25) + '...' : item.name}</div></div>
     <div class="summary-item sales-only"><div class="label">Min. Price</div><div class="value">${ws > 0 ? fmt(ws) : '—'}</div></div>
-    <div class="summary-item"><div class="label">Setup Price</div><div class="value gold">${rt > 0 ? fmt(rt) : '—'}</div></div>
+    <div class="summary-item"><div class="label">Total Price</div><div class="value gold">${rt > 0 ? fmt(rt) : '—'}</div></div>
     <div class="summary-item"><div class="label">Monthly Price</div><div class="value gold">${moRt > 0 ? fmt(moRt) + '/mo' : '—'}</div></div>
   `;
 
@@ -948,7 +948,7 @@ function renderTab1(){
     detailHtml += `<div style="font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Setup Pricing</div>`;
     detailHtml += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px">`;
     detailHtml += `<div class="result-box sales-only"><div class="rlabel">Min. Price</div><div class="rvalue">${fmtWsRange(item)}</div></div>`;
-    detailHtml += `<div class="result-box"><div class="rlabel">Retail Price</div><div class="rvalue" style="color:var(--purple)">${fmtRtRange(item)}</div></div>`;
+    detailHtml += `<div class="result-box"><div class="rlabel">Total Price</div><div class="rvalue" style="color:var(--purple)">${fmtRtRange(item)}</div></div>`;
     detailHtml += `</div>`;
   }
 
@@ -956,7 +956,7 @@ function renderTab1(){
     detailHtml += `<div style="font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Monthly Pricing</div>`;
     detailHtml += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">`;
     detailHtml += `<div class="result-box sales-only"><div class="rlabel">Monthly Min.</div><div class="rvalue">${fmtMoWsRange(item)}</div></div>`;
-    detailHtml += `<div class="result-box"><div class="rlabel">Monthly Retail</div><div class="rvalue" style="color:var(--purple)">${fmtMoRtRange(item)}</div></div>`;
+    detailHtml += `<div class="result-box"><div class="rlabel">Monthly Total</div><div class="rvalue" style="color:var(--purple)">${fmtMoRtRange(item)}</div></div>`;
     detailHtml += `</div>`;
   }
 
@@ -1033,7 +1033,7 @@ function buildTab2Table(){
       html += `<tr>
         <td class="cb"><input type="checkbox" data-idx="${idx}" class="t2-cb"></td>
         <td>${item.name}${descHtml}</td>
-        <td style="font-size:.78rem;text-align:center;white-space:nowrap">${(item.moRtMin && mh === 0) ? `<span style="color:var(--purple);font-weight:600">${fmt(item.moRtMin)}/mo</span>` : `<span class="sales-only" style="display:inline"><input type="number" class="maint-hrs-input" data-idx="${idx}" value="${mh}" step="0.5" min="0" max="10" style="width:48px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;font-size:.75rem;text-align:center;background:var(--surface);color:var(--text)"> hrs/mo</span><span class="client-only">${mh > 0 ? mh + ' hrs/mo' : '—'}</span>`}</td>
+        <td style="font-size:.78rem;text-align:center;white-space:nowrap">${((item.moRtMax || item.moRtMin) && mh === 0) ? `<span style="color:var(--purple);font-weight:600">${fmt(item.moRtMax || item.moRtMin)}/mo</span>` : `<span class="sales-only" style="display:inline"><input type="number" class="maint-hrs-input" data-idx="${idx}" value="${mh}" step="0.5" min="0" max="10" style="width:48px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;font-size:.75rem;text-align:center;background:var(--surface);color:var(--text)"> hrs/mo</span><span class="client-only">${mh > 0 ? mh + ' hrs/mo' : '—'}</span>`}</td>
         <td class="sales-only" style="font-size:.78rem;white-space:nowrap">${wsDisplay}</td>
         <td style="font-size:.78rem;white-space:nowrap">${rtDisplay}</td>
       </tr>`;
@@ -1207,7 +1207,7 @@ const OFFER_TIERS = {
       { cat: 'Website & Funnel', items: [0] },
       { cat: 'ScaleLogix AI Premium Agents', items: [0] },
     ],
-    discount: 0.05, fixedPrice: 8875, fixedMaintHrs: 4,
+    discount: 0.05, fixedMaintHrs: 4,
     suggestedPkg: 'Core',
     suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams',
@@ -1221,7 +1221,7 @@ const OFFER_TIERS = {
       { cat: 'ScaleLogix AI Premium Agents', items: [1] },
       { cat: 'AI Automation & CRM', items: [0] },
     ],
-    discount: 0.075, fixedPrice: 19976, fixedMaintHrs: 13,
+    discount: 0.075, fixedMaintHrs: 13,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1236,7 +1236,7 @@ const OFFER_TIERS = {
       { cat: 'AI Automation & CRM', items: [0, 1, 3] },
       { cat: 'Marketing & Outreach', items: [0, 1] },
     ],
-    discount: 0.10, fixedPrice: 35955, fixedMaintHrs: 22,
+    discount: 0.10, fixedMaintHrs: 22,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1273,8 +1273,8 @@ function getOfferTierPreview(tierKey){
   });
   const n = items.length;
   const ds = tier ? (tier.discount || 0) : 0;
-  const finalRtSetup = tier && tier.fixedPrice ? tier.fixedPrice : rtSum;
-  const rtBeforeDiscount = ds > 0 ? Math.round(finalRtSetup / (1 - ds)) : finalRtSetup;
+  const rtBeforeDiscount = rtSum;
+  const finalRtSetup = ds > 0 ? Math.round(rtSum * (1 - ds)) : rtSum;
   const dsSavingsSetup = rtBeforeDiscount - finalRtSetup;
   const finalMaintHrs = tier && tier.fixedMaintHrs != null ? tier.fixedMaintHrs : maintHrs;
   const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
@@ -1376,9 +1376,9 @@ function buildTab4(){
       <div class="ins-items-list" style="max-height:350px">${itemsHtml}</div>
       <div id="offer-detail-totals" style="margin-top:14px">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius)">
-          <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Min. Price</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(preview.wsSetup)}</div></div>
           <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Total Price</div><div style="font-size:1.1rem;font-weight:700;color:var(--purple)">${fmt(preview.rtSetup)}${preview.hasContactUs ? '+' : ''}</div>${preview.dsSavingsSetup > 0 ? `<div style="font-size:.65rem;color:var(--green);margin-top:2px">${tier.name} Discount (${(preview.ds*100).toFixed(preview.ds*100 % 1 === 0 ? 0 : 1)}%): -${fmt(preview.dsSavingsSetup)}</div>` : ''}</div>
           <div style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Est. Maintenance</div><div style="font-size:1.1rem;font-weight:700;color:var(--text)">${preview.maintHrs} hrs/mo</div><div style="font-size:.68rem;color:var(--purple);cursor:pointer;text-decoration:underline;margin-top:2px" onclick="document.querySelector('[data-tab=\\'tab3\\']').click()">See Dev Packages</div></div>
+          <div class="sales-only" style="text-align:center"><div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px">Min. Price</div><div style="font-size:1rem;font-weight:700;color:var(--text)">${fmt(preview.wsSetup)}</div></div>
         </div>
       </div>
     </div>
@@ -1410,12 +1410,12 @@ function renderTab4(){
     const maxP = getOfferTierPreview('max');
 
     document.getElementById('t4-summary').innerHTML = `
-      <div class="summary-item"><div class="label">Starter Setup</div><div class="value">${fmt(starterP.rtSetup)}</div></div>
-      <div class="summary-item"><div class="label">Pro Setup</div><div class="value gold">${fmt(proP.rtSetup)}</div></div>
-      <div class="summary-item"><div class="label">Max Setup</div><div class="value gold">${fmt(maxP.rtSetup)}</div></div>
-      <div class="summary-item sales-only"><div class="label">Starter Min. Price</div><div class="value">${fmt(starterP.wsSetup)}</div></div>
-      <div class="summary-item sales-only"><div class="label">Pro Min. Price</div><div class="value">${fmt(proP.wsSetup)}</div></div>
-      <div class="summary-item sales-only"><div class="label">Max Min. Price</div><div class="value">${fmt(maxP.wsSetup)}</div></div>
+      <div class="summary-item"><div class="label">Starter Total</div><div class="value">${fmt(starterP.rtSetup)}</div></div>
+      <div class="summary-item"><div class="label">Pro Total</div><div class="value gold">${fmt(proP.rtSetup)}</div></div>
+      <div class="summary-item"><div class="label">Max Total</div><div class="value gold">${fmt(maxP.rtSetup)}</div></div>
+      <div class="summary-item sales-only"><div class="label">Starter Min.</div><div class="value">${fmt(starterP.wsSetup)}</div></div>
+      <div class="summary-item sales-only"><div class="label">Pro Min.</div><div class="value">${fmt(proP.wsSetup)}</div></div>
+      <div class="summary-item sales-only"><div class="label">Max Min.</div><div class="value">${fmt(maxP.wsSetup)}</div></div>
     `;
 
     const recEl = document.getElementById('t4-pkg-rec');
