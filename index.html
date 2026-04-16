@@ -1205,7 +1205,7 @@ const OFFER_TIERS = {
       { cat: 'Website & Funnel', items: [0] },
       { cat: 'ScaleLogix AI Premium Agents', items: [0] },
     ],
-    discount: 0.05, fixedPrice: 8875,
+    discount: 0.05, fixedPrice: 8875, fixedMaintHrs: 4,
     suggestedPkg: 'Core',
     suggestedHrs: 7,
     badge: 'BEST FOR: Solo operators &amp; small teams',
@@ -1219,7 +1219,7 @@ const OFFER_TIERS = {
       { cat: 'ScaleLogix AI Premium Agents', items: [1] },
       { cat: 'AI Automation & CRM', items: [0] },
     ],
-    discount: 0.075, fixedPrice: 19976,
+    discount: 0.075, fixedPrice: 19976, fixedMaintHrs: 13,
     suggestedPkg: 'Plus',
     suggestedHrs: 16,
     badge: 'MOST POPULAR: Growing businesses',
@@ -1234,7 +1234,7 @@ const OFFER_TIERS = {
       { cat: 'AI Automation & CRM', items: [0, 1, 3] },
       { cat: 'Marketing & Outreach', items: [0, 1] },
     ],
-    discount: 0.10, fixedPrice: 35955,
+    discount: 0.10, fixedPrice: 35955, fixedMaintHrs: 22,
     suggestedPkg: 'Custom',
     suggestedHrs: 0,
     badge: 'BEST VALUE: Agencies scaling fast',
@@ -1274,8 +1274,9 @@ function getOfferTierPreview(tierKey){
   const finalRtSetup = tier && tier.fixedPrice ? tier.fixedPrice : rtSum;
   const rtBeforeDiscount = ds > 0 ? Math.round(finalRtSetup / (1 - ds)) : finalRtSetup;
   const dsSavingsSetup = rtBeforeDiscount - finalRtSetup;
+  const finalMaintHrs = tier && tier.fixedMaintHrs != null ? tier.fixedMaintHrs : maintHrs;
   const mgn = finalRtSetup > 0 ? marginPct(finalRtSetup, wsSetup) : 0;
-  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount, maintHrs, dsSavingsSetup, mgn, ds, hasContactUs };
+  return { n, wsSetup, rtSetup: finalRtSetup, rtBeforeDiscount, maintHrs: finalMaintHrs, dsSavingsSetup, mgn, ds, hasContactUs };
 }
 
 function buildTab4(){
