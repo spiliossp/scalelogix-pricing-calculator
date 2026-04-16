@@ -1309,7 +1309,7 @@ function buildTab4(){
       <div class="pkg-subtitle">${tier.subtitle}</div>
       <div class="pkg-discount">${preview.n} services included</div>
       <div class="pkg-prices">
-        ${preview.ds > 0 ? `<div class="price-row"><span class="plabel">List Price</span><span class="pval" style="font-size:.8rem;color:var(--text-dim);text-decoration:line-through">${fmt(preview.rtBeforeDiscount)}</span></div>` : ''}
+        ${preview.ds > 0 ? `<div class="price-row"><span class="plabel">Market Price</span><span class="pval" style="font-size:.8rem;color:var(--text-dim);text-decoration:line-through">${fmt(preview.rtBeforeDiscount)}</span></div>` : ''}
         <div class="price-row"><span class="plabel" style="font-size:.9rem;font-weight:600">Total Price</span><span class="pval gold" style="font-size:1.05rem" id="offer-rt-${tierKey}">${fmt(preview.rtSetup)}${preview.hasContactUs ? '+' : ''}</span></div>
         ${preview.ds > 0 ? `<div class="price-row"><span class="plabel" style="color:var(--green)">${(preview.ds*100).toFixed(preview.ds*100 % 1 === 0 ? 0 : 1)}% bundle discount</span><span class="pval" style="color:var(--green);font-size:.8rem">Save ${fmt(preview.dsSavingsSetup)}</span></div>` : ''}
         ${preview.hasContactUs ? `<div class="price-row"><span class="plabel" style="font-size:.65rem;color:var(--text-dim)">Includes custom-scope items</span><span class="pval" style="font-size:.65rem;color:var(--accent-dark)">+ Contact Us</span></div>` : ''}
