@@ -1433,6 +1433,7 @@ function buildTab4(){
       <span class="ihours sales-only" style="white-space:nowrap">${isCu ? '—' : (ws > 0 ? fmt(ws) : '—')}</span>
       <span style="white-space:nowrap;font-size:.72rem;color:${isCu ? 'var(--accent-dark)' : 'var(--purple)'};font-weight:600">${rtDisplay}</span>
       <span style="white-space:nowrap;font-size:.68rem;color:var(--text-dim)">${mh > 0 ? mh + ' hr' + (mh > 1 ? 's' : '') + '/mo' : ''}</span>
+      ${(e.item.moRtMin || 0) > 0 ? `<span style="white-space:nowrap;font-size:.68rem;color:var(--purple);font-weight:600">${e.item.moRtMin === e.item.moRtMax ? fmt(e.item.moRtMin) : fmt(e.item.moRtMin) + ' – ' + fmt(e.item.moRtMax)}/mo</span>` : ''}
     </div>`;
   });
 
