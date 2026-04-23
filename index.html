@@ -926,25 +926,30 @@ function showT1Services(ci){
   const cat = SERVICES[ci];
   listEl.style.display = 'block';
   listEl.innerHTML = `
-    <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:600;margin-bottom:8px">${cat.cat}</div>
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:0;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);padding:0 12px 6px;border-bottom:1px solid var(--border);margin-bottom:4px">
+      <span>${cat.cat}</span>
+      <span style="text-align:right;min-width:80px">Monthly Hrs</span>
+      <span style="text-align:right;min-width:100px;margin-left:12px">Monthly Price</span>
+      <span style="text-align:right;min-width:90px;margin-left:12px">Total Price</span>
+    </div>
     ${cat.items.map((item, ii) => {
       const isActive = t1SelectedService === ii;
-      const svcType = getServiceType(item);
-      const priceLabel = isContactItem(item) ? contactLabel(item) : (item.rtMin ? fmt(item.rtMin) + (item.rtMax > item.rtMin ? ' – ' + fmt(item.rtMax) : '') : '');
-      const moLabel = isContactItem(item) ? '' : (item.moRtMin ? fmt(item.moRtMin) + (item.moRtMax > item.moRtMin ? ' – ' + fmt(item.moRtMax) : '') + '/mo' : '');
-      const priceText = [priceLabel, moLabel].filter(Boolean).join(' + ');
+      const isCu = isContactItem(item);
+      const setupPrice = isCu ? `<span style="color:var(--accent-dark);font-weight:600;font-size:.72rem">${contactLabel(item)}</span>` : (item.rtMin ? `<span style="color:var(--purple);font-weight:700;font-size:.8rem">${fmt(item.rtMin)}${item.rtMax > item.rtMin ? ' – ' + fmt(item.rtMax) : ''}</span>` : `<span style="color:var(--text-dim);font-size:.75rem">—</span>`);
+      const mh = item.maintHrs || 0;
+      const monthlyHrs = mh > 0 ? `<span style="font-size:.75rem;color:var(--text-dim)">${mh} hrs/mo</span>` : `<span style="color:var(--text-dim);font-size:.75rem">—</span>`;
+      const moMin = item.moRtMin || 0;
+      const moMax = item.moRtMax || moMin;
+      const monthlyPrice = moMin > 0 ? `<span style="color:var(--purple);font-weight:600;font-size:.75rem">${moMin === moMax ? fmt(moMin) : fmt(moMin) + ' – ' + fmt(moMax)}/mo</span>` : `<span style="color:var(--text-dim);font-size:.75rem">—</span>`;
       return `
-      <div class="t1-svc-card${isActive?' active':''}" onclick="selectT1Service(${ci},${ii})">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-          <div>
-            <div class="svc-name">${item.name}</div>
-            <div class="svc-desc">${item.desc || ''}</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0">
-            <div class="svc-price">${priceText || 'Custom'}</div>
-            <div style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.3px;background:rgba(121,102,162,.08);color:var(--purple);margin-top:4px">${svcType === 'both' ? 'Setup + Monthly' : svcType === 'monthly' ? 'Monthly' : 'Setup'}</div>
-          </div>
+      <div class="t1-svc-card${isActive?' active':''}" onclick="selectT1Service(${ci},${ii})" style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:0">
+        <div>
+          <div class="svc-name">${item.name}</div>
+          <div class="svc-desc">${item.desc || ''}</div>
         </div>
+        <div style="text-align:right;min-width:80px;padding-left:12px">${monthlyHrs}</div>
+        <div style="text-align:right;min-width:100px;padding-left:12px">${monthlyPrice}</div>
+        <div style="text-align:right;min-width:90px;padding-left:12px">${setupPrice}</div>
       </div>`;
     }).join('')}
   `;
